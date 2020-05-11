@@ -1,4 +1,4 @@
-# grades-platform
+# marks-platform
 
 ## Project setup
 ```
