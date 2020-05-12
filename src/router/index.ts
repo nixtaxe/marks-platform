@@ -1,9 +1,16 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 
+import LandingPage from '@/views/LandingPage.vue'
+
 Vue.use(VueRouter)
 
-const routes: Array<RouteConfig> = []
+const routes: Array<RouteConfig> = [
+  {
+    path: '/',
+    component: LandingPage,
+  },
+]
 
 const router = new VueRouter({
   mode: 'history',
