@@ -26,6 +26,7 @@
       <v-btn
         fab
         class="mt-5 indigo"
+        @click="loginForm = true"
       >
         <v-icon
           large
@@ -34,6 +35,13 @@
           mdi-exit-to-app
         </v-icon>
       </v-btn>
+      <v-dialog
+        v-model="loginForm"
+        max-width="480px"
+        max-height="320px"
+      >
+        <LoginForm />
+      </v-dialog>
     </v-layout>
   </v-container>
 </template>
@@ -42,8 +50,16 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 
-@Component
-export default class LandingPageHero extends Vue {}
+import LoginForm from '@/components/LoginForm.vue'
+
+@Component({
+  components: {
+    LoginForm,
+  },
+})
+export default class LandingPageHero extends Vue {
+  loginForm: Boolean = false
+}
 </script>
 
 <style lang="scss" scoped>
