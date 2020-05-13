@@ -1,5 +1,5 @@
 import TokenResponse from '@/models/TokenResponse'
 
 export default interface IUserService {
-  login(): Promise<TokenResponse>
+  login(username: string, password: string): Promise<TokenResponse>
 }
