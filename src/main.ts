@@ -5,6 +5,7 @@ import App from '@/App.vue'
 import router from '@/router'
 import vuetify from '@/plugins/vuetify'
 import buildDependencyContainer from '@/app.container'
+import VueCompositionApi from '@vue/composition-api'
 
 class AppBootstrap {
   constructor () {
@@ -18,6 +19,8 @@ class AppBootstrap {
 
   private loadVueApp (): void {
     Vue.config.productionTip = false
+
+    Vue.use(VueCompositionApi)
 
     new Vue({
       router,
