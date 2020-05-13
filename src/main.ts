@@ -1,14 +1,30 @@
 import 'reflect-metadata'
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import vuetify from './plugins/vuetify'
 import '@babel/polyfill'
+import Vue from 'vue'
+import App from '@/App.vue'
+import router from '@/router'
+import vuetify from '@/plugins/vuetify'
+import buildDependencyContainer from '@/app.container'
 
-Vue.config.productionTip = false
+class AppBootstrap {
+  constructor () {
+    this.loadDependencyContainer()
+    this.loadVueApp()
+  }
 
-new Vue({
-  router,
-  vuetify,
-  render: (h) => h(App),
-}).$mount('#app')
+  private loadDependencyContainer (): void {
+    buildDependencyContainer()
+  }
+
+  private loadVueApp (): void {
+    Vue.config.productionTip = false
+
+    new Vue({
+      router,
+      vuetify,
+      render: (h) => h(App),
+    }).$mount('#app')
+  }
+}
+
+new AppBootstrap()
