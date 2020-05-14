@@ -93,9 +93,7 @@ class LandingPageMachine {
           on: { OPEN_LOGIN_FORM: 'loginForm' },
         },
         loginForm: {
-          on: {
-            CLOSE_LOGIN_FORM: 'idle',
-          },
+          on: { CLOSE_LOGIN_FORM: 'idle' },
           invoke: {
             id: 'loginFormMachine',
             src: loginFormMachine,

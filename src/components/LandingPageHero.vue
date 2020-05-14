@@ -26,7 +26,6 @@
       <v-btn
         fab
         class="mt-5 indigo"
-        @click="sendOpenLoginForm()"
       >
         <v-icon
           large

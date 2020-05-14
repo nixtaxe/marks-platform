@@ -12,16 +12,17 @@ export default function useLandingPageHeroMachine (machine: any) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (value, _) => {
       isLoginForm.value = value === 'loginForm'
-      // console.log(isLoginForm.value)
     },
   )
 
   const loginFormMachine = ref(null)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   watch(isLoginForm, (opened, _) => {
-    // console.log(opened)
     if (opened) {
       loginFormMachine.value = machine.state.children.loginFormMachine
+    } else {
+      loginFormMachine.value = null
+      sendCloseLoginForm()
     }
   })
 
