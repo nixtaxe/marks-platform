@@ -85,21 +85,33 @@ class LandingPageMachine {
       },
     )
 
-    const landingPageMachine = Machine({
-      id: 'landingPageMachine',
-      initial: 'welcomePage',
+    const landingPageHeroMachine = Machine({
+      id: 'landingPageHero',
+      initial: 'idle',
       states: {
-        welcomePage: {
+        idle: {
           on: { OPEN_LOGIN_FORM: 'loginForm' },
         },
         loginForm: {
           on: {
-            CLOSE_LOGIN_FORM: 'welcomePage',
+            CLOSE_LOGIN_FORM: 'idle',
           },
-          // @ts-ignore
           invoke: {
-            id: 'loginForm',
+            id: 'loginFormMachine',
             src: loginFormMachine,
+          },
+        },
+      },
+    })
+
+    const landingPageMachine = Machine({
+      id: 'landingPage',
+      initial: 'landingPageHero',
+      states: {
+        landingPageHero: {
+          invoke: {
+            id: 'landingPageHeroMachine',
+            src: landingPageHeroMachine,
           },
         },
       },
@@ -108,6 +120,6 @@ class LandingPageMachine {
   }
 }
 
-const landingPageMachine = interpret(new LandingPageMachine().createMachine())
+const landingPageMachine = new LandingPageMachine().createMachine()
 
 export default landingPageMachine
