@@ -26,7 +26,7 @@
       <v-btn
         fab
         class="mt-5 indigo"
-        @click="loginForm = true"
+        @click="sendOpenLoginForm()"
       >
         <v-icon
           large
@@ -36,7 +36,7 @@
         </v-icon>
       </v-btn>
       <v-dialog
-        v-model="loginForm"
+        v-model="isLoginForm"
         max-width="480px"
         max-height="320px"
       >
@@ -49,16 +49,21 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { Prop } from 'vue-property-decorator'
 
 import LoginForm from '@/components/LoginForm.vue'
+import useLandingPageHeroMachine from '@/compositions/useLandingPageHeroMachine'
 
 @Component({
   components: {
     LoginForm,
   },
+  setup (props: any) {
+    return { ...useLandingPageHeroMachine(props.landingPageHeroMachine) }
+  },
 })
 export default class LandingPageHero extends Vue {
-  loginForm: Boolean = false
+  @Prop() landingPageHeroMachine: any
 }
 </script>
 
