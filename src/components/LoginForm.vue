@@ -19,10 +19,10 @@
           v-model="username"
           name="username"
           label="Имя пользователя"
-          :rules="usernameRules"
           required
+          :rules="usernameRules"
           :autofocus="true"
-          :disabled="isSubmitting"
+          :disabled="!isEditing"
           @change="sendChange({ key: 'username', value: username })"
         />
         <v-text-field
@@ -30,9 +30,9 @@
           name="password"
           label="Пароль"
           type="password"
-          :rules="passwordRules"
           required
-          :disabled="isSubmitting"
+          :rules="passwordRules"
+          :disabled="!isEditing"
           @change="sendChange({ key: 'password', value: password })"
         />
         <v-card-actions>
