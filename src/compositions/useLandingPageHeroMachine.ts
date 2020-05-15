@@ -1,37 +1,31 @@
-import { ref, watch } from '@vue/composition-api'
+import { watch, computed } from '@vue/composition-api'
 
 export default function useLandingPageHeroMachine (machine: any) {
-  const send = machine.send
+  const state = computed(() => machine.state)
+  const context = computed(() => machine.state.context)
+  const loginFormMachine = computed(
+    () => machine.state.children.loginFormMachine,
+  )
+  const isLoginForm = computed(() => machine.state.matches('loginForm'))
 
+  const send = machine.send
   const sendOpenLoginForm = () => send('OPEN_LOGIN_FORM')
   const sendCloseLoginForm = () => send('CLOSE_LOGIN_FORM')
 
-  const isLoginForm = ref(false)
-  watch(
-    () => machine.state.value,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (value, _) => {
-      isLoginForm.value = value === 'loginForm'
-    },
-  )
-
-  const loginFormMachine = ref(null)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   watch(isLoginForm, (opened, _) => {
-    if (opened) {
-      loginFormMachine.value = machine.state.children.loginFormMachine
-    } else {
-      loginFormMachine.value = null
+    if (!opened) {
       sendCloseLoginForm()
     }
   })
 
   return {
-    state: machine.state,
+    state,
+    context,
+    isLoginForm,
+    loginFormMachine,
     send,
     sendOpenLoginForm,
     sendCloseLoginForm,
-    isLoginForm,
-    loginFormMachine,
   }
 }

@@ -26,6 +26,7 @@
       <v-btn
         fab
         class="mt-5 indigo"
+        @click="sendOpenLoginForm()"
       >
         <v-icon
           large
@@ -39,7 +40,7 @@
         max-width="480px"
         max-height="320px"
       >
-        <LoginForm />
+        <LoginForm :login-form-machine="loginFormMachine" />
       </v-dialog>
     </v-layout>
   </v-container>
