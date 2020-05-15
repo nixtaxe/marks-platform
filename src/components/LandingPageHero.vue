@@ -36,11 +36,16 @@
         </v-icon>
       </v-btn>
       <v-dialog
-        v-model="isLoginForm"
         max-width="480px"
         max-height="320px"
+        :value="isLoginForm"
+        :persistent="isPersistent"
+        @input="sendCloseLoginForm()"
       >
-        <LoginForm :login-form-machine="loginFormMachine" />
+        <LoginForm
+          v-if="isLoginForm"
+          :login-form-machine="loginFormMachine"
+        />
       </v-dialog>
     </v-layout>
   </v-container>

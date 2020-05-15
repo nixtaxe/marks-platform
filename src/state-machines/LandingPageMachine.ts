@@ -1,6 +1,6 @@
 import IUserService from '@/services/IUserService'
 import { inject } from 'inversify-props'
-import { Machine, assign } from 'xstate'
+import { Machine, assign, sendParent, send } from 'xstate'
 
 class LandingPageMachine {
   @inject() private userService!: IUserService
@@ -8,7 +8,7 @@ class LandingPageMachine {
   public create () {
     const loginFormMachine = Machine(
       {
-        id: 'login',
+        id: 'loginForm',
         initial: 'editing',
         context: {
           // @ts-ignore
@@ -33,14 +33,21 @@ class LandingPageMachine {
                 actions: ['onChange'],
               },
               SUBMIT: 'submitting',
-              ERROR: {
-                target: '.error',
-                actions: 'onError',
+              ERROR: '.error',
+              CLOSE_LOGIN_FORM: {
+                actions: 'onCloseLoginForm',
               },
             },
             states: {
               pristine: {},
-              error: {},
+              error: {
+                entry: 'onError',
+                on: {
+                  ERROR: {
+                    actions: 'onError',
+                  },
+                },
+              },
             },
           },
           submitting: {
@@ -51,19 +58,15 @@ class LandingPageMachine {
                 target: 'success',
                 actions: ['onDone'],
               },
-              onError: {
-                target: 'editing.error',
-                actions: 'onError',
-              },
+              onError: 'editing.error',
             },
           },
-          success: {
-            type: 'final',
-          },
+          success: {},
         },
       },
       {
         actions: {
+          onCloseLoginForm: sendParent('REQUEST_CLOSE_LOGIN_FORM'),
           onChange: assign({
             values: (context, event: any) => ({
               ...context.values,
@@ -95,22 +98,36 @@ class LandingPageMachine {
       },
     )
 
-    const landingPageHeroMachine = Machine({
-      id: 'landingPageHero',
-      initial: 'idle',
-      states: {
-        idle: {
-          on: { OPEN_LOGIN_FORM: 'loginForm' },
-        },
-        loginForm: {
-          on: { CLOSE_LOGIN_FORM: 'idle' },
-          invoke: {
-            id: 'loginFormMachine',
-            src: loginFormMachine,
+    const landingPageHeroMachine = Machine(
+      {
+        id: 'landingPageHero',
+        initial: 'idle',
+        states: {
+          idle: {
+            on: { OPEN_LOGIN_FORM: 'loginForm' },
+          },
+          loginForm: {
+            on: {
+              CLOSE_LOGIN_FORM: {
+                actions: 'onCloseLoginForm',
+              },
+              REQUEST_CLOSE_LOGIN_FORM: 'idle',
+            },
+            invoke: {
+              id: 'loginFormMachine',
+              src: loginFormMachine,
+            },
           },
         },
       },
-    })
+      {
+        actions: {
+          onCloseLoginForm: send('CLOSE_LOGIN_FORM', {
+            to: 'loginFormMachine',
+          }),
+        },
+      },
+    )
 
     const landingPageMachine = Machine({
       id: 'landingPage',
