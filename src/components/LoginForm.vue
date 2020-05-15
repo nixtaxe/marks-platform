@@ -22,6 +22,7 @@
           :rules="usernameRules"
           required
           :autofocus="true"
+          :disabled="isSubmitting"
           @change="sendChange({ key: 'username', value: username })"
         />
         <v-text-field
@@ -31,6 +32,7 @@
           type="password"
           :rules="passwordRules"
           required
+          :disabled="isSubmitting"
           @change="sendChange({ key: 'password', value: password })"
         />
         <v-card-actions>
