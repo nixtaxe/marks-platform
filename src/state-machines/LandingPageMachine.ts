@@ -1,84 +1,94 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import IUserService from '@/services/IUserService'
 import { inject } from 'inversify-props'
-import { Machine, interpret } from 'xstate'
+import { Machine, assign } from 'xstate'
 
 class LandingPageMachine {
   @inject() private userService!: IUserService
 
-  public createMachine () {
-    const loginMachine = Machine({
-      id: 'login',
-      initial: 'idle',
-      context: {
-        data: null,
-        error: null,
-      },
-      states: {
-        idle: {
-          on: { FETCH: 'loading' },
-        },
-        loading: {
-          invoke: {
-            src: (_: any, event: any) =>
-              this.userService.login(
-                event.value.username,
-                event.value.password,
-              ),
-            onDone: {
-              target: 'success',
-            },
-            onError: {
-              target: 'failure',
-            },
-          },
-        },
-        success: {
-          type: 'final',
-        },
-        failure: {
-          on: { FETCH: 'loading' },
-        },
-      },
-    })
-
+  public create () {
     const loginFormMachine = Machine(
       {
-        id: 'loginForm',
-        initial: 'empty',
+        id: 'login',
+        initial: 'editing',
         context: {
-          username: '',
-          password: '',
-          usernameError: null,
-          passwordError: null,
-          token: null,
-        },
-        on: {
-          TYPING: [
-            { target: '.invalid', cond: 'isEmpty' },
-            {
-              target: '.valid',
-            },
-          ],
+          // @ts-ignore
+          values: {
+            token: null,
+          },
+          rules: {
+            usernameRules: [
+              (v: string) => !!v || 'Введите, пожалуйста, имя пользователя',
+            ],
+            passwordRules: [
+              (v: string) => !!v || 'Введите, пожалуйста, пароль',
+            ],
+          },
+          error: '',
         },
         states: {
-          empty: {},
-          // @ts-ignore
-          valid: {
-            invoke: {
-              id: 'login',
-              src: loginMachine,
+          editing: {
+            initial: 'pristine',
+            on: {
+              CHANGE: {
+                actions: ['onChange'],
+              },
+              SUBMIT: 'submitting',
+              ERROR: {
+                target: '.error',
+                actions: 'onError',
+              },
+            },
+            states: {
+              pristine: {},
+              error: {},
             },
           },
-          invalid: {},
+          submitting: {
+            // @ts-ignore
+            invoke: {
+              src: 'onSubmit',
+              onDone: {
+                target: 'success',
+                actions: ['onDone'],
+              },
+              onError: {
+                target: 'editing.error',
+                actions: 'onError',
+              },
+            },
+          },
+          success: {
+            type: 'final',
+          },
         },
       },
       {
-        guards: {
-          isEmpty: (context: any, event: any) => {
-            return (
-              !event.value.username.trim().length &&
-              !event.value.password.trim().length
+        actions: {
+          onChange: assign({
+            values: (context, event: any) => ({
+              ...context.values,
+              [event.key]: event.value,
+            }),
+          }),
+          // @ts-ignore
+          clearForm: assign({
+            values: {},
+          }),
+          onDone: assign({
+            values: (context, event: any) => ({
+              ...context.values,
+              token: event.data,
+            }),
+          }),
+          onError: assign({ error: (context: any, event: any) => event.data }),
+        },
+        services: {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          onSubmit: (context: any, _event: any) => {
+            assign({ error: () => '' })
+            return this.userService.login(
+              context.values.username,
+              context.values.password,
             )
           },
         },
@@ -118,6 +128,6 @@ class LandingPageMachine {
   }
 }
 
-const landingPageMachine = new LandingPageMachine().createMachine()
+const landingPageMachine = new LandingPageMachine().create()
 
 export default landingPageMachine
