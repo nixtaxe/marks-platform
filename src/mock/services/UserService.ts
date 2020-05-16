@@ -6,8 +6,10 @@ import usernameLoginResponse from '@/mock/data/login/username-login-response.jso
 const load = <T>(mockData: T, error: string | null = null, time = 1000) => {
   return new Promise<T>((resolve, reject) => {
     setTimeout(() => {
-      if (error === null) resolve(mockData)
-      else reject(error)
+      if (error === null) {
+        localStorage.setItem('user-info', JSON.stringify(mockData))
+        resolve(mockData)
+      } else reject(error)
     }, time)
   })
 }
