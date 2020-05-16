@@ -1,0 +1,7 @@
+{
+  "user": {
+    "username": "username",
+    "email": "email@mail.com"
+  },
+  "jwt": "user"
+}

@@ -1,5 +1,5 @@
-import TokenResponse from '@/models/TokenResponse'
+import LoginResponse from '@/models/LoginResponse'
 
 export default interface IUserService {
-  login(username: string, password: string): Promise<TokenResponse>
+  login(username: string, password: string): Promise<LoginResponse>
 }

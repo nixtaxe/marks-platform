@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import IUserService from '@/services/IUserService'
-import TokenResponse from '@/models/TokenResponse'
-import token from '@/mock/data/token.json'
+import LoginResponse from '@/models/LoginResponse'
+import usernameLoginResponse from '@/mock/data/login/username-login-response.json'
 
-const load = <T>(mockData: T, time = 0, error: string | null = null) => {
+const load = <T>(mockData: T, error: string | null = null, time = 1000) => {
   return new Promise<T>((resolve, reject) => {
     setTimeout(() => {
       if (error === null) resolve(mockData)
@@ -13,12 +13,11 @@ const load = <T>(mockData: T, time = 0, error: string | null = null) => {
 }
 
 export default class FakeUserService implements IUserService {
-  public login (username: string, password: string): Promise<TokenResponse> {
+  public login (username: string, password: string): Promise<LoginResponse> {
     if (username === 'username' && password === 'password')
-      return load<TokenResponse>(token, 1000)
-    return load<TokenResponse>(
-      token,
-      1000,
+      return load<LoginResponse>(usernameLoginResponse)
+    return load<LoginResponse>(
+      usernameLoginResponse,
       'Неправильное имя пользователя или пароль',
     )
   }

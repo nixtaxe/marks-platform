@@ -13,7 +13,7 @@ class LandingPageMachine {
         context: {
           // @ts-ignore
           values: {
-            token: null,
+            loginResponse: null,
           },
           rules: {
             usernameRules: [
@@ -80,7 +80,7 @@ class LandingPageMachine {
           onDone: assign({
             values: (context, event: any) => ({
               ...context.values,
-              token: event.data,
+              loginResponse: event.data,
             }),
           }),
           onError: assign({ error: (context: any, event: any) => event.data }),
