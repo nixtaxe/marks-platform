@@ -1,6 +1,6 @@
 import IUserService from '@/services/IUserService'
 import { inject } from 'inversify-props'
-import { Machine, assign, sendParent, send } from 'xstate'
+import { Machine, assign, send } from 'xstate'
 
 class LandingPageMachine {
   @inject() private userService!: IUserService
@@ -34,9 +34,7 @@ class LandingPageMachine {
               },
               SUBMIT: 'submitting',
               ERROR: '.error',
-              CLOSE_LOGIN_FORM: {
-                actions: 'onCloseLoginForm',
-              },
+              CLOSE_LOGIN_FORM: 'closed',
             },
             states: {
               pristine: {},
@@ -62,11 +60,13 @@ class LandingPageMachine {
             },
           },
           success: {},
+          closed: {
+            type: 'final',
+          },
         },
       },
       {
         actions: {
-          onCloseLoginForm: sendParent('REQUEST_CLOSE_LOGIN_FORM'),
           onChange: assign({
             values: (context, event: any) => ({
               ...context.values,
@@ -111,11 +111,11 @@ class LandingPageMachine {
               CLOSE_LOGIN_FORM: {
                 actions: 'onCloseLoginForm',
               },
-              REQUEST_CLOSE_LOGIN_FORM: 'idle',
             },
             invoke: {
               id: 'loginFormMachine',
               src: loginFormMachine,
+              onDone: 'idle',
             },
           },
         },
