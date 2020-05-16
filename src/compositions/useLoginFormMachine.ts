@@ -7,7 +7,7 @@ export default function useLoginFormMachine (machine: any) {
   const isError = computed(() => machine.state.matches({ editing: 'error' }))
   const isEditing = computed(() => machine.state.matches('editing'))
   const isSubmitting = computed(() => machine.state.matches('submitting'))
-  const hasToken = computed(() => machine.state.conxtext.values.token !== null)
+  const isSuccess = computed(() => machine.state.matches('success'))
 
   const send = machine.send
   const sendSubmit = () => machine.send({ type: 'SUBMIT' })
@@ -29,7 +29,7 @@ export default function useLoginFormMachine (machine: any) {
     isError,
     isEditing,
     isSubmitting,
-    hasToken,
+    isSuccess,
     usernameRules: machine.state.context.rules.usernameRules,
     passwordRules: machine.state.context.rules.passwordRules,
     send,

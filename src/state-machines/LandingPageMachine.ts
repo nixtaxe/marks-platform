@@ -24,6 +24,7 @@ class LandingPageMachine {
             ],
           },
           error: '',
+          success: 'Вход успешно произведен',
         },
         states: {
           editing: {
