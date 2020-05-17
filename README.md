@@ -16,7 +16,7 @@ All machines are made with [xstate](https://xstate.js.org/).
 1. [Landing Page Machine](https://xstate.js.org/viz/?gist=407e1b0ce471cd6afbbc9e31f17864b6)
 
 ## Evernote Project Plan
-[Project Check List (in Russian)](https://www.evernote.com/shard/s442/sh/46b20a3b-6eb1-48cb-acd2-87a20e33bec7/0ca3535a8a682c1c56c0ad98d7b9a896)
+[Project Check List (in Russian)](https://www.evernote.com/shard/s739/sh/2bda08d6-391f-42a1-8dbb-0b3b630dbd3b/4d2736eb17f5be88fac252fd74494081)
 
 ## Project Tools
 * Figma Design and Prototype
