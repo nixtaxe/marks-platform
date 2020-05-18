@@ -1,10 +1,13 @@
 <template>
   <v-toolbar
-    short
+    :dense="true"
     color="primary"
   >
     <v-spacer />
-    <v-btn @click="logout()">
+    <v-toolbar-title>
+      {{ name }}
+    </v-toolbar-title>
+    <v-btn @click="sendLogout()">
       Выйти
     </v-btn>
   </v-toolbar>
@@ -13,15 +16,15 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import IUserService from '../services/IUserService'
-import { inject } from 'inversify-props'
+import { Prop } from 'vue-property-decorator'
+import useToolbarMachine from '@/compositions/useToolbarMachine'
 
-@Component({})
+@Component({
+  setup (props: any) {
+    return useToolbarMachine(props.toolbarMachine)
+  },
+})
 export default class ToolBar extends Vue {
-  @inject() userService!: IUserService
-  public logout () {
-    this.userService.logout()
-    location.reload()
-  }
+  @Prop() toolbarMachine: any
 }
 </script>
