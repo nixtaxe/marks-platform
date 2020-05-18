@@ -50,11 +50,15 @@ class MarksPageMachine {
           },
         },
         on: {
-          LOGOUT: '.closed',
+          LOGOUT: {
+            target: '.closed',
+            actions: 'logout',
+          },
         },
       },
       {
         actions: {
+          logout: () => this.userService.logout(),
           openLandingPage: () => router.replace('/'),
           addUserInfoToContext: assign({
             userInfo: (context: any, event: any) => event.data,

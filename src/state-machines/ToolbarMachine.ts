@@ -19,16 +19,14 @@ class ToolbarMachine {
           idle: {},
         },
         on: {
-          LOGOUT: 'logout',
+          LOGOUT: {
+            actions: 'logout',
+          },
         },
       },
       {
         actions: {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          logout: (context: any, event: any) => {
-            this.userService.logout()
-            sendParent('LOGOUT')
-          },
+          logout: sendParent('LOGOUT'),
         },
       },
     )
