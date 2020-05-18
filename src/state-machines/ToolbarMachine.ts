@@ -2,19 +2,20 @@ import { Machine, sendParent } from 'xstate'
 import { inject } from 'inversify-props'
 import IUserService from '@/services/IUserService'
 
+interface ToolbarContext {
+  user: User
+}
+
+type ToolbarEvent = { type: 'LOGOUT' }
+
 class ToolbarMachine {
   @inject() userService!: IUserService
 
   public create () {
-    return Machine(
+    return Machine<ToolbarContext, ToolbarEvent>(
       {
         id: 'toolbar',
         initial: 'idle',
-        context: {
-          user: {
-            name: 'Иванов И.И.',
-          },
-        },
         states: {
           idle: {},
         },

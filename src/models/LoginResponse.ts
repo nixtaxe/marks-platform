@@ -1,4 +1,4 @@
 export default interface LoginResponse {
-  user: Object
+  user: User
   jwt: string
 }
