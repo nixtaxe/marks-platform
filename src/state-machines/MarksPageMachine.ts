@@ -34,7 +34,6 @@ class MarksPageMachine {
                       id: 'toolbarMachine',
                       src: toolbarMachine,
                       data: {
-                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         user: (context: any, _event: any) =>
                           context.userInfo.user,
                       },
@@ -61,7 +60,7 @@ class MarksPageMachine {
           logout: () => this.userService.logout(),
           openLandingPage: () => router.replace('/'),
           addUserInfoToContext: assign({
-            userInfo: (context: any, event: any) => event.data,
+            userInfo: (_context: any, event: any) => event.data,
           }),
         },
         services: {

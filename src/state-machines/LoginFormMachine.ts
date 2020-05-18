@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Machine, assign } from 'xstate'
 import { inject } from 'inversify-props'
 import IUserService from '@/services/IUserService'
@@ -52,7 +51,6 @@ class LoginFormMachine {
             },
           },
           submitting: {
-            // @ts-ignore
             invoke: {
               src: 'onSubmit',
               onDone: {
@@ -78,7 +76,6 @@ class LoginFormMachine {
               [event.key]: event.value,
             }),
           }),
-          // @ts-ignore
           clearForm: assign({
             values: () => {},
           }),
@@ -88,9 +85,8 @@ class LoginFormMachine {
               loginResponse: event.data,
             }),
           }),
-          onError: assign({ error: (context: any, event: any) => event.data }),
-          openMarksPage: (context: any, event: any) =>
-            setTimeout(() => router.push('marks'), 500),
+          onError: assign({ error: (_context: any, event: any) => event.data }),
+          openMarksPage: () => setTimeout(() => router.push('marks'), 500),
         },
         services: {
           onSubmit: (context: any, _event: any) => {

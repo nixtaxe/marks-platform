@@ -28,6 +28,6 @@ module.exports = {
     // Next 2 lines are needed for solving problem with interface imports
     // Solution source: https://stackoverflow.com/a/61555310
     'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': ['error'],
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   },
 }
