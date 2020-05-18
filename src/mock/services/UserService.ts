@@ -14,6 +14,14 @@ const load = <T>(mockData: T, error: string | null = null, time = 1000) => {
   })
 }
 
+const getLocalStorageItem = <T>(itemName: string) => {
+  return new Promise<T>((resolve, reject) => {
+    const resultString: string | null = localStorage.getItem(itemName)
+    if (resultString) resolve(JSON.parse(resultString))
+    else reject('Not found')
+  })
+}
+
 export default class FakeUserService implements IUserService {
   public login (username: string, password: string): Promise<LoginResponse> {
     if (username === 'username' && password === 'password')
@@ -26,5 +34,9 @@ export default class FakeUserService implements IUserService {
 
   public logout (): void {
     localStorage.removeItem('user-info')
+  }
+
+  public getUserInfo (): Promise<LoginResponse> {
+    return getLocalStorageItem<LoginResponse>('user-info')
   }
 }
