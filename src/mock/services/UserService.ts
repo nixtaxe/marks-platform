@@ -23,4 +23,8 @@ export default class FakeUserService implements IUserService {
       'Неправильное имя пользователя или пароль',
     )
   }
+
+  public logout (): void {
+    localStorage.removeItem('user-info')
+  }
 }
