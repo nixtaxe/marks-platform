@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import IUserService from '@/services/IUserService'
 import { inject } from 'inversify-props'
 import { Machine, assign, send } from 'xstate'
+import router from '@/router'
 
 class LandingPageMachine {
   @inject() private userService!: IUserService
@@ -60,7 +62,9 @@ class LandingPageMachine {
               onError: 'editing.error',
             },
           },
-          success: {},
+          success: {
+            entry: 'openMarksPage',
+          },
           closed: {
             type: 'final',
           },
@@ -85,9 +89,10 @@ class LandingPageMachine {
             }),
           }),
           onError: assign({ error: (context: any, event: any) => event.data }),
+          openMarksPage: (context: any, event: any) =>
+            setTimeout(() => router.push('marks'), 500),
         },
         services: {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           onSubmit: (context: any, _event: any) => {
             assign({ error: () => '' })
             return this.userService.login(
