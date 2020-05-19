@@ -2,19 +2,44 @@ import { Machine, assign } from 'xstate'
 import { inject } from 'inversify-props'
 import IUserService from '@/services/IUserService'
 import router from '@/router'
+import LoginResponse from '@/models/LoginResponse'
+
+interface LoginFormValues {
+  username: string
+  password: string
+  loginResponse?: LoginResponse
+}
+
+interface LoginFormRules {
+  usernameRules: Function[]
+  passwordRules: Function[]
+}
+
+interface LoginFormContext {
+  values: LoginFormValues
+  rules: LoginFormRules
+  error?: string
+  success?: string
+}
+
+type LoginFormEvents =
+  | { type: 'CHANGE'; key: string; value: string }
+  | { type: 'SUBMIT' }
+  | { type: 'ERROR'; data: string }
+  | { type: 'CLOSE_LOGIN_FORM' }
 
 class LoginFormMachine {
   @inject() private userService!: IUserService
 
   public create () {
-    return Machine(
+    return Machine<LoginFormContext, LoginFormEvents>(
       {
         id: 'loginForm',
         initial: 'editing',
         context: {
-          // @ts-ignore
           values: {
-            loginResponse: null,
+            username: '',
+            password: '',
           },
           rules: {
             usernameRules: [
@@ -24,7 +49,6 @@ class LoginFormMachine {
               (v: string) => !!v || 'Введите, пожалуйста, пароль',
             ],
           },
-          error: '',
           success: 'Вход успешно произведен',
         },
         states: {
@@ -32,7 +56,7 @@ class LoginFormMachine {
             initial: 'pristine',
             on: {
               CHANGE: {
-                actions: ['onChange'],
+                actions: 'onChange',
               },
               SUBMIT: 'submitting',
               ERROR: '.error',
@@ -55,7 +79,7 @@ class LoginFormMachine {
               src: 'onSubmit',
               onDone: {
                 target: 'success',
-                actions: ['onDone'],
+                actions: 'onDone',
               },
               onError: 'editing.error',
             },
@@ -76,20 +100,17 @@ class LoginFormMachine {
               [event.key]: event.value,
             }),
           }),
-          clearForm: assign({
-            values: () => {},
-          }),
           onDone: assign({
             values: (context, event: any) => ({
               ...context.values,
               loginResponse: event.data,
             }),
           }),
-          onError: assign({ error: (_context: any, event: any) => event.data }),
+          onError: assign({ error: (_context, event: any) => event.data }),
           openMarksPage: () => setTimeout(() => router.push('marks'), 500),
         },
         services: {
-          onSubmit: (context: any, _event: any) => {
+          onSubmit: (context: LoginFormContext, _event: any) => {
             assign({ error: () => '' })
             return this.userService.login(
               context.values.username,
