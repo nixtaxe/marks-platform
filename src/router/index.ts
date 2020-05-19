@@ -35,6 +35,11 @@ router.beforeEach((to, from, next) => {
     return next('/')
   }
 
+  // redirect to marks if logged in (in testiong purposes)
+  if (loggedIn && to.path !== '/marks') {
+    return next('/marks')
+  }
+
   next()
 })
 
