@@ -1,24 +1,35 @@
-import { Machine, assign } from 'xstate'
+import LoginResponse from '@/models/LoginResponse'
+import { Machine, assign, DoneInvokeEvent } from 'xstate'
 import toolbarMachine from '@/state-machines/ToolbarMachine'
 import { inject } from 'inversify-props'
 import IUserService from '@/services/IUserService'
 import router from '@/router'
 
+interface MarksPageContext {
+  userInfo: LoginResponse
+}
+
+type MarksPageEvent = { type: 'LOGOUT' }
+
 class MarksPageMachine {
   @inject() userService!: IUserService
 
   public create () {
-    return Machine(
+    return Machine<MarksPageContext, MarksPageEvent>(
       {
         id: 'marksPage',
         initial: 'loading',
         states: {
           loading: {
             invoke: {
+              id: 'loadUserInfo',
               src: 'loadUserInfo',
               onDone: {
                 target: 'loaded',
-                actions: 'addUserInfoToContext',
+                actions: assign({
+                  userInfo: (_context, event: DoneInvokeEvent<LoginResponse>) =>
+                    event.data,
+                }),
               },
               onError: 'closed',
             },
@@ -34,7 +45,7 @@ class MarksPageMachine {
                       id: 'toolbarMachine',
                       src: toolbarMachine,
                       data: {
-                        user: (context: any, _event: any) =>
+                        user: (context: MarksPageContext) =>
                           context.userInfo.user,
                       },
                     },
@@ -59,9 +70,6 @@ class MarksPageMachine {
         actions: {
           logout: () => this.userService.logout(),
           openLandingPage: () => router.replace('/'),
-          addUserInfoToContext: assign({
-            userInfo: (_context: any, event: any) => event.data,
-          }),
         },
         services: {
           loadUserInfo: () => this.userService.getUserInfo(),
