@@ -2,30 +2,15 @@
 import IUserService from '@/services/IUserService'
 import LoginResponse from '@/models/LoginResponse'
 import usernameLoginResponse from '@/mock/data/login/username-login-response.json'
-
-const load = <T>(mockData: T, error: string | null = null, time = 1000) => {
-  return new Promise<T>((resolve, reject) => {
-    setTimeout(() => {
-      if (error === null) {
-        localStorage.setItem('user-info', JSON.stringify(mockData))
-        resolve(mockData)
-      } else reject(error)
-    }, time)
-  })
-}
-
-const getLocalStorageItem = <T>(itemName: string) => {
-  return new Promise<T>((resolve, reject) => {
-    const resultString: string | null = localStorage.getItem(itemName)
-    if (resultString) resolve(JSON.parse(resultString))
-    else reject('Not found')
-  })
-}
+import { load, handleSaving, getLocalStorageItem } from '@/mock/helpers'
 
 export default class FakeUserService implements IUserService {
   public login (username: string, password: string): Promise<LoginResponse> {
-    if (username === 'username' && password === 'password')
-      return load<LoginResponse>(usernameLoginResponse)
+    if (username === 'username' && password === 'password') {
+      const promise = load<LoginResponse>(usernameLoginResponse)
+      handleSaving(promise, 'user-info')
+      return promise
+    }
     return load<LoginResponse>(
       usernameLoginResponse,
       'Неправильное имя пользователя или пароль',
