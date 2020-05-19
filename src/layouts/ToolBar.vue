@@ -1,13 +1,13 @@
 <template>
-  <v-toolbar
-    :dense="true"
-    color="primary"
-  >
+  <v-toolbar class="indigo">
     <v-spacer />
-    <v-toolbar-title>
+    <v-toolbar-title class="white--text mr-5">
       {{ name }}
     </v-toolbar-title>
-    <v-btn @click="sendLogout()">
+    <v-btn
+      class="flat mr-5"
+      @click="sendLogout()"
+    >
       Выйти
     </v-btn>
   </v-toolbar>
