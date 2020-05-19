@@ -1,5 +1,5 @@
 import LoginResponse from '@/models/LoginResponse'
-import { Machine, assign, DoneInvokeEvent } from 'xstate'
+import { Machine, assign } from 'xstate'
 import toolbarMachine from '@/state-machines/ToolbarMachine'
 import { inject } from 'inversify-props'
 import IUserService from '@/services/IUserService'
@@ -26,10 +26,7 @@ class MarksPageMachine {
               src: 'loadUserInfo',
               onDone: {
                 target: 'loaded',
-                actions: assign({
-                  userInfo: (_context, event: DoneInvokeEvent<LoginResponse>) =>
-                    event.data,
-                }),
+                actions: 'saveUserInfo',
               },
               onError: 'closed',
             },
@@ -68,6 +65,9 @@ class MarksPageMachine {
       },
       {
         actions: {
+          saveUserInfo: assign({
+            userInfo: (_context, event: any) => event.data,
+          }),
           logout: () => this.userService.logout(),
           openLandingPage: () => router.replace('/'),
         },
