@@ -1,19 +1,29 @@
 <template>
-  <ToolBar
-    v-if="isLoaded"
-    :toolbar-machine="toolbarMachine"
-  />
+  <div>
+    <ToolBar
+      v-if="isLoaded"
+      :toolbar-machine="toolbarMachine"
+    />
+    <v-layout
+      column
+      pa-5
+    >
+      <MarksTable />
+    </v-layout>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import ToolBar from '@/layouts/ToolBar.vue'
+import MarksTable from '@/components/MarksTable.vue'
 import useMarksPageMachine from '../compositions/useMarksPageMachine'
 
 @Component({
   components: {
     ToolBar,
+    MarksTable,
   },
   setup () {
     return useMarksPageMachine()
