@@ -13,6 +13,7 @@
     "@babel/polyfill": "^7.4.4",
     "@vue/composition-api": "^0.5.0",
     "@xstate/vue": "^0.1.1",
+    "axios": "^0.19.2",
     "core-js": "^3.6.5",
     "inversify-props": "^2.0.1",
     "reflect-metadata": "^0.1.13",
