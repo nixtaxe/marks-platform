@@ -1,7 +1,5 @@
-import LoginResponse from '@/models/LoginResponse'
-
 export default interface IUserService {
-  login(username: string, password: string): Promise<LoginResponse>
+  login(username: string, password: string): Promise<User>
   logout(): void
-  getUserInfo(): Promise<LoginResponse>
+  getUserInfo(): Promise<User>
 }

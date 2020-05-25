@@ -1,4 +1,3 @@
-import LoginResponse from '@/models/LoginResponse'
 import { Machine, assign } from 'xstate'
 import toolbarMachine from '@/state-machines/ToolbarMachine'
 import { inject } from 'inversify-props'
@@ -6,7 +5,7 @@ import IUserService from '@/services/IUserService'
 import router from '@/router'
 
 interface MarksPageContext {
-  userInfo: LoginResponse
+  user: User
 }
 
 type MarksPageEvent = { type: 'LOGOUT' }
@@ -42,8 +41,7 @@ class MarksPageMachine {
                       id: 'toolbarMachine',
                       src: toolbarMachine,
                       data: {
-                        user: (context: MarksPageContext) =>
-                          context.userInfo.user,
+                        user: (context: MarksPageContext) => context.user,
                       },
                     },
                   },
@@ -66,7 +64,7 @@ class MarksPageMachine {
       {
         actions: {
           saveUserInfo: assign({
-            userInfo: (_context, event: any) => event.data,
+            user: (_context, event: any) => event.data,
           }),
           logout: () => this.userService.logout(),
           openLandingPage: () => router.replace('/'),

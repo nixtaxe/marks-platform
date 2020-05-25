@@ -2,17 +2,17 @@
 import IUserService from '@/services/IUserService'
 import LoginResponse from '@/models/LoginResponse'
 import usernameLoginResponse from '@/mock/data/login/username-login-response.json'
-import { load, handleSaving, getLocalStorageItem } from '@/mock/helpers'
+import { load, handleSaving, getLocalStorageItem } from '@/services/helpers'
 
 export default class FakeUserService implements IUserService {
-  public login (username: string, password: string): Promise<LoginResponse> {
+  public async login (username: string, password: string): Promise<User> {
     if (username === 'username' && password === 'password') {
       const promise = load<LoginResponse>(usernameLoginResponse)
-      handleSaving(promise, 'user-info')
-      return promise
+      await handleSaving(promise, 'user-info')
+      return (await promise).user
     }
-    return load<LoginResponse>(
-      usernameLoginResponse,
+    return await load<User>(
+      usernameLoginResponse.user,
       'Неправильное имя пользователя или пароль',
     )
   }
@@ -21,7 +21,8 @@ export default class FakeUserService implements IUserService {
     localStorage.removeItem('user-info')
   }
 
-  public getUserInfo (): Promise<LoginResponse> {
-    return getLocalStorageItem<LoginResponse>('user-info')
+  public async getUserInfo (): Promise<User> {
+    const userInfo = await getLocalStorageItem<LoginResponse>('user-info')
+    return userInfo.user
   }
 }
