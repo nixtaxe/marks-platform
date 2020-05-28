@@ -1,15 +1,6 @@
 import GroupMarks from '@/models/GroupMarks'
-
-interface TableHeader {
-  text: string
-  value: string
-  sortable: boolean
-}
-
-interface TableItem {
-  id: number
-  name?: string
-}
+import TableHeader from '@/models/TableHeader'
+import TableItem from '@/models/TableItem'
 
 export default function getMarksDataForTable (groupMarks: GroupMarks) {
   const { groupName, studentMarks } = groupMarks
