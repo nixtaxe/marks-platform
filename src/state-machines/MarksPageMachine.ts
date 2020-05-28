@@ -3,6 +3,7 @@ import toolbarMachine from '@/state-machines/ToolbarMachine'
 import { inject } from 'inversify-props'
 import IUserService from '@/services/IUserService'
 import router from '@/router'
+import marksTableMachine from '@/state-machines/MarksTableMachine'
 
 interface MarksPageContext {
   user: User
@@ -36,6 +37,15 @@ class MarksPageMachine {
               main: {
                 type: 'parallel',
                 states: {
+                  marksTable: {
+                    invoke: {
+                      id: 'marksTableMachine',
+                      src: marksTableMachine,
+                      data: {
+                        user: (context: MarksPageContext) => context.user,
+                      },
+                    },
+                  },
                   toolbar: {
                     invoke: {
                       id: 'toolbarMachine',

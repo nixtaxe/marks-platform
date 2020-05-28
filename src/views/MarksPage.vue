@@ -5,10 +5,11 @@
       :toolbar-machine="toolbarMachine"
     />
     <v-layout
+      v-if="isLoaded"
       column
       pa-5
     >
-      <MarksTable />
+      <MarksTable :marks-table-machine="marksTableMachine" />
     </v-layout>
   </div>
 </template>

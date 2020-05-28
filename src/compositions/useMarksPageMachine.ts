@@ -6,5 +6,8 @@ export default function useMarksPageMachine () {
   const { state } = useMachine(marksPageMachine)
   const isLoaded = computed(() => state.value.matches('loaded.main'))
   const toolbarMachine = computed(() => state.value.children.toolbarMachine)
-  return { isLoaded, toolbarMachine }
+  const marksTableMachine = computed(
+    () => state.value.children.marksTableMachine,
+  )
+  return { isLoaded, toolbarMachine, marksTableMachine }
 }
