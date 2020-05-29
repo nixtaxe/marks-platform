@@ -1,9 +1,7 @@
 import { computed } from '@vue/composition-api'
 
 export default function useMarksTableMachine (machine: any) {
-  const groupName = computed(
-    () => machine.state.context.semesterDiscipline.groupName,
-  )
+  const groupName = computed(() => machine.state.context.groupName)
   const headers = computed(() => machine.state.context.headers)
   const studentMarks = computed(() => machine.state.context.studentMarks)
 
