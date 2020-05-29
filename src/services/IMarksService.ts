@@ -1,5 +1,6 @@
-import GroupMarks from '@/models/GroupMarks'
+import SemesterDiscipline from '@/models/SemesterDiscipline'
+import ID from '@/models/ID'
 
 export default interface IMarksService {
-  getGroupMarks(): Promise<GroupMarks>
+  getSemesterDiscipline(id: ID): Promise<SemesterDiscipline>
 }

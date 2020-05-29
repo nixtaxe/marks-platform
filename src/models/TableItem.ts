@@ -1,4 +1,6 @@
+import ID from './ID'
+
 export default interface TableItem {
-  id: number
-  name?: string
+  id: ID
+  name: string
 }

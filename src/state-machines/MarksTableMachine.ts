@@ -1,18 +1,18 @@
 import { Machine, assign } from 'xstate'
 import { inject } from 'inversify-props'
 import IMarksService from '@/services/IMarksService'
-import GroupMarks from '@/models/GroupMarks'
+import SemesterDiscipline from '@/models/SemesterDiscipline'
 import TableHeader from '@/models/TableHeader'
 import TableItem from '@/models/TableItem'
 import getMarksDataForTable from '@/helpers/getMarksDataForTable'
 
 interface MarksTableContext {
   user: User
-  marksTable?: GroupMarks
-  groupName?: string
-  headers?: TableHeader[]
-  studentMarks?: TableItem[]
-  error?: string
+  semesterDiscipline: SemesterDiscipline
+  groupName: string
+  headers: TableHeader[]
+  studentMarks: TableItem[]
+  error: string
 }
 
 type MarksTableEvent = { type: 'REFRESH' }
@@ -63,13 +63,13 @@ class MarksTableMachine {
               groupName,
               headers,
               studentMarks,
-              marksTable: event.data,
+              semesterDiscipline: event.data,
             }
           }),
         },
         services: {
           loadMarksTable: () => {
-            return this.marksService.getGroupMarks()
+            return this.marksService.getSemesterDiscipline('1')
           },
         },
       },

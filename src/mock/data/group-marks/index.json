@@ -1,41 +1,83 @@
 {
-  "groupName": "Б8116-01.03.02",
-  "studentMarks": [
-    {
-      "id": 1,
-      "student": {
-        "name": "Иванов И.И."
-      },
-      "marks": [
-        {
-          "date": "19.05",
-          "value": 5
-        }
-      ]
+  "id": "1",
+  "teacher_discipline_student_group": {
+    "teacher": {
+      "user": {
+        "familyName": "Иванов",
+        "name": "Иван",
+        "patronymic": "Иванович"
+      }
     },
-    {
-      "id": 2,
-      "student": {
-        "name": "Александров А.А."
-      },
-      "marks": [
-        {
-          "date": "19.05",
-          "value": 5
-        }
-      ]
+    "academic_discipline": {
+      "name": "Методы дистанционного зондирования Земли"
     },
-    {
-      "id": 3,
-      "student": {
-        "name": "Степанов С.С."
-      },
-      "marks": [
+    "student_group": {
+      "id": "1",
+      "name": "Б8116-01.03.02",
+      "students": [
         {
-          "date": "19.05",
-          "value": 5
+          "id": "1",
+          "user": {
+            "familyName": "Андреев",
+            "name": "Андрей",
+            "patronymic": "Андреевич"
+          }
+        },
+        {
+          "id": "2",
+          "user": {
+            "familyName": "Петров",
+            "name": "Петр",
+            "patronymic": "Петрович"
+          }
+        },
+        {
+          "id": "3",
+          "user": {
+            "familyName": "Мариева",
+            "name": "Мария",
+            "patronymic": "Марьевна"
+          }
         }
       ]
     }
-  ] 
+  },
+  "assignment_groups": [
+    {
+      "assignments": [
+        {
+          "id": "1",
+          "title": "Поиск пикселя по координатам",
+          "marks": [
+            {
+              "value": 9,
+              "student": {
+                "user": {
+                  "familyName": "Андреев",
+                  "name": "Андрей",
+                  "patronymic": "Андреевич"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "title": "Поиск координат по пикселю",
+          "marks": [
+            {
+              "value": 10,
+              "student": {
+                "user": {
+                  "familyName": "Андреев",
+                  "name": "Андрей",
+                  "patronymic": "Андреевич"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
