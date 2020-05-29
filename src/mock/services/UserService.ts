@@ -7,12 +7,12 @@ import { load, handleSaving, getLocalStorageItem } from '@/services/helpers'
 export default class FakeUserService implements IUserService {
   public async login (username: string, password: string): Promise<User> {
     if (username === 'username' && password === 'password') {
-      const promise = load<LoginResponse>(usernameLoginResponse)
+      const promise = load<LoginResponse>(usernameLoginResponse as any)
       await handleSaving(promise, 'user-info')
       return (await promise).user
     }
     return await load<User>(
-      usernameLoginResponse.user,
+      {} as any,
       'Неправильное имя пользователя или пароль',
     )
   }
