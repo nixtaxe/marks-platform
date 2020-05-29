@@ -21,12 +21,12 @@
       sort-by="name"
       item-key="id"
     >
-      <template v-slot:item.19.05="props">
-        <v-edit-dialog :return-value.sync="props.item['19.05']">
-          {{ props.item['19.05'] }}
+      <template v-slot:item.name="props">
+        <v-edit-dialog :return-value.sync="props.item.name">
+          {{ props.item.name }}
           <template v-slot:input>
             <v-text-field
-              v-model="props.item['19.05']"
+              v-model="props.item.name"
               label="Edit"
               single-line
               counter
