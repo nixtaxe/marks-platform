@@ -9,7 +9,7 @@ export default function useLandingPageHeroMachine (machine: any) {
   const isLoginForm = computed(() => machine.state.matches('loginForm'))
   const isPersistent = computed(() => {
     if (loginFormMachine.value !== undefined)
-      return !loginFormMachine.value.state.matches('editing')
+      return loginFormMachine.value.state.matches('submitting')
     else return false
   })
 
