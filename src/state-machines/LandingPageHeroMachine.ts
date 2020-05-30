@@ -25,7 +25,7 @@ const landingPageHeroMachine = Machine(
   },
   {
     actions: {
-      onCloseLoginForm: send('CLOSE_LOGIN_FORM', {
+      onCloseLoginForm: send('CLOSE_FORM', {
         to: 'loginFormMachine',
       }),
     },
