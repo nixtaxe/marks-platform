@@ -10,6 +10,7 @@
       pa-5
     >
       <MarksTable :marks-table-machine="marksTableMachine" />
+      <CreationButtons />
     </v-layout>
   </div>
 </template>
@@ -19,12 +20,14 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import ToolBar from '@/layouts/ToolBar.vue'
 import MarksTable from '@/components/MarksTable.vue'
+import CreationButtons from '@/components/CreationButtons.vue'
 import useMarksPageMachine from '../compositions/useMarksPageMachine'
 
 @Component({
   components: {
     ToolBar,
     MarksTable,
+    CreationButtons,
   },
   setup () {
     return useMarksPageMachine()
