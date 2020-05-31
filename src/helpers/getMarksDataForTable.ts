@@ -4,10 +4,10 @@ import TableItem from '@/models/TableItem'
 
 export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
   const groupName =
-    groupMarks.teacher_discipline_student_group?.student_group.name
+    groupMarks.teacher_discipline_student_group.student_group.name
   const studentGroup = groupMarks.teacher_discipline_student_group.student_group
   const studentAssignments = groupMarks.assignment_groups.flatMap(
-    (ag) => ag?.assignments,
+    (ag) => ag.assignments,
   )
   const headers: TableHeader[] = [
     { text: 'Студент', value: 'name', sortable: false },
