@@ -1,6 +1,6 @@
 import IUserService from '@/services/IUserService'
 import httpClient from '@/services/HttpClient'
-import LoginQuery from '@/services/impl/graphql/LoginQuery.ts'
+import LoginMutation from '@/services/impl/graphql/LoginMutation'
 import LoginResponse from '@/models/LoginResponse'
 import { getLocalStorageItem, saveToLocalStorage } from '@/services/helpers'
 import GetUserQuery from './graphql/GetUserQuery'
@@ -8,7 +8,7 @@ import GetUserQuery from './graphql/GetUserQuery'
 export default class UserService implements IUserService {
   async login (username: string, password: string): Promise<User> {
     const loginResult = await httpClient.mutate({
-      mutation: LoginQuery,
+      mutation: LoginMutation,
       variables: { username, password },
     })
 
