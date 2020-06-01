@@ -9,5 +9,8 @@ export default function useMarksPageMachine () {
   const marksTableMachine = computed(
     () => state.value.children.marksTableMachine,
   )
-  return { isLoaded, toolbarMachine, marksTableMachine }
+  const creationButtonsMachine = computed(
+    () => state.value.children.creationButtonsMachine,
+  )
+  return { isLoaded, toolbarMachine, marksTableMachine, creationButtonsMachine }
 }
