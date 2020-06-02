@@ -28,16 +28,15 @@ export default gql`
         }
       }
       assignment_groups {
+        id
         assignments {
+          id
           title
           marks {
+            id
             value
             student {
-              user {
-                familyName
-                name
-                patronymic
-              }
+              id
             }
           }
         }

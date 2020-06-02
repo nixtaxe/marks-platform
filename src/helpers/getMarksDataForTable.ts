@@ -13,7 +13,7 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
     { text: 'Студент', value: 'name', sortable: false },
   ].concat(
     studentAssignments.map((x) => {
-      return { text: x.title, value: x.id as string, sortable: false }
+      return { text: x.title, value: x.id, sortable: false }
     }),
   )
   let items: TableItem[] = []
@@ -23,9 +23,12 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
       name: `${x.user.familyName} ${x.user.name} ${x.user.patronymic}`,
     })
   })
-  studentAssignments.forEach((x, i) => {
-    // @ts-ignore
-    x.marks.forEach((y) => (items[i][x.id] = y.value))
+  studentAssignments.forEach((assignment) => {
+    assignment.marks.forEach((mark) => {
+      const itemId = items.findIndex((k) => k.id === mark.student.id)
+      // @ts-ignore
+      items[itemId][assignment.id] = mark.value
+    })
   })
 
   return { groupName, headers, items }
