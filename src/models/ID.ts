@@ -1,2 +1,2 @@
-type ID = string | undefined
+type ID = string
 export default ID
