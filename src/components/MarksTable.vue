@@ -21,16 +21,30 @@
       sort-by="name"
       item-key="id"
     >
-      <template v-slot:item.name="props">
-        <v-edit-dialog :return-value.sync="props.item.name">
-          {{ props.item.name }}
+      <template
+        v-for="header in headers"
+        v-slot:[`item.${header.value}`]="{ item }"
+      >
+        <v-edit-dialog
+          :key="`${item.id}-${header.id}`"
+          :return-value.sync="item[header.value]"
+        >
+          {{ item[header.value] }}
+
           <template v-slot:input>
-            <v-text-field
-              v-model="props.item.name"
-              label="Edit"
-              single-line
-              counter
-            />
+            <tr>
+              <td>0 &lt;</td>
+              <v-spacer />
+              <v-text-field
+                v-model="item[header.value]"
+                class="px-3"
+                label="Edit"
+                single-line
+                width="25px"
+              />
+              <v-spacer />
+              <td>&lt; 10</td>
+            </tr>
           </template>
         </v-edit-dialog>
       </template>
