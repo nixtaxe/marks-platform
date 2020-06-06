@@ -1,4 +1,4 @@
-import { Machine } from 'xstate'
+import { Machine, assign } from 'xstate'
 
 export enum FormMode {
   Showing,
@@ -23,8 +23,23 @@ type FormEvents =
 const formMachine = Machine<FormMachineContext, FormEvents>(
   {
     id: 'form',
-    initial: 'unknown',
+    initial: 'preloading',
     states: {
+      preloading: {
+        invoke: {
+          src: 'onPreload',
+          onDone: {
+            actions: 'onPreloadDone',
+            target: 'unknown',
+          },
+          onError: {
+            target: 'editing.error',
+          },
+        },
+      },
+      preloadingError: {
+        entry: 'onPreloadingError',
+      },
       unknown: {
         on: {
           '': [
@@ -88,6 +103,17 @@ const formMachine = Machine<FormMachineContext, FormEvents>(
     },
   },
   {
+    services: {
+      onPreload: () => {
+        return Promise.resolve({})
+      },
+    },
+    actions: {
+      onPreloadDone: () => {},
+      onPreloadError: assign({
+        error: (_context, event: any) => event.message,
+      }),
+    },
     guards: {
       isShowing: (context, _event) => context.mode === FormMode.Showing,
       isCreatingOrEditing: (context, _event) =>
