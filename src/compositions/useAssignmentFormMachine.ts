@@ -4,10 +4,14 @@ export default function useAssignmentFormMachine (machine: any) {
   const state = computed(() => machine.state)
   const context = computed(() => machine.state.context)
   const form = ref({ validate: () => false })
+  const assignmentGroups = computed(
+    () => machine.state.context.values.assignmentGroups,
+  )
   const isError = computed(() => machine.state.matches({ editing: 'error' }))
   const isEditing = computed(() => machine.state.matches('editing'))
   const isSubmitting = computed(() => machine.state.matches('submitting'))
   const isSuccess = computed(() => machine.state.matches('success'))
+  const wasPreloaded = computed(() => !machine.state.matches('preloading'))
 
   const send = machine.send
   const sendSubmit = () => machine.send({ type: 'SUBMIT' })
@@ -31,10 +35,12 @@ export default function useAssignmentFormMachine (machine: any) {
     state,
     context,
     form,
+    assignmentGroups,
     isError,
     isEditing,
     isSubmitting,
     isSuccess,
+    wasPreloaded,
     titleRules: machine.state.context.rules.titleRules,
     send,
     sendSubmit,

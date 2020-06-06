@@ -3,6 +3,8 @@ import Assignment from '@/models/Assignment'
 import formMachine, { FormMode } from './FormMachine'
 import { inject } from 'inversify-props'
 import IAssignmentService from '@/services/IAssignmentService'
+import AssignmentGroup from '@/models/AssignmentGroup'
+import ID from '@/models/ID'
 
 interface AssignmentFormRules {
   titleRules: Function[]
@@ -10,6 +12,8 @@ interface AssignmentFormRules {
 
 interface AssignmentFormValues {
   assignment: Assignment
+  assignmentGroups: AssignmentGroup[]
+  semesterDisciplineId: ID
   assignmentResponse?: Assignment
 }
 
@@ -24,7 +28,9 @@ interface AssignmentFormContext {
 const assignmentContext = <AssignmentFormContext>{
   mode: FormMode.Creating,
   values: <AssignmentFormValues>{
-    assignment: {},
+    assignment: <any>{},
+    assignmentGroups: [],
+    semesterDisciplineId: '1',
   },
   rules: {
     titleRules: [(v: string) => !!v || 'Введите название задания'],
@@ -46,14 +52,27 @@ class AssignmentFormMachine {
             context.values.assignment,
           )
         },
+        onPreload: (context: AssignmentFormContext, _event: any) => {
+          assign({ error: () => '' })
+          return this.assignmentService.getAssignmentGroups(
+            context.values.semesterDisciplineId,
+          )
+        },
       },
       actions: {
         onChange: assign({
           values: (context, event: any) => ({
+            ...context.values,
             assignment: {
               ...context.values.assignment,
               [event.key]: event.value,
             },
+          }),
+        }),
+        onPreloadDone: assign({
+          values: (context, event: any) => ({
+            ...context.values,
+            assignmentGroups: event.data,
           }),
         }),
         onDone: assign({

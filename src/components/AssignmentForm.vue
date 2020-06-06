@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card v-if="wasPreloaded">
     <v-card-title>
       Задание
     </v-card-title>
@@ -69,6 +69,20 @@
             </v-btn>
           </v-date-picker>
         </v-dialog>
+        <v-select
+          v-model="selectedAssignmentGroup"
+          :items="assignmentGroups"
+          name="item"
+          item-text="name"
+          item-value="id"
+          label="Группа заданий"
+          @change="
+            sendChange({
+              key: 'assignment_group',
+              value: selectedAssignmentGroup,
+            })
+          "
+        />
         <v-card-actions>
           <v-spacer />
           <v-btn
@@ -104,5 +118,6 @@ export default class AssignmentForm extends Vue {
   title: string = ''
   deadlineMenu = false
   deadlineDate: string = new Date().toISOString().substring(0, 10)
+  selectedAssignmentGroup = null
 }
 </script>
