@@ -11,7 +11,12 @@ export default function useMarksTableMachine (machine: any) {
 
   const send = machine.send
   const sendRefresh = () => send('REFRESH')
-
+  const getColor = (mark: number, bad = 5, good = 7, excellent = 10) => {
+    if (mark <= bad) return 'red'
+    else if (mark <= good) return 'yellow'
+    else if (mark < excellent) return 'green'
+    else if (mark === excellent) return 'teal darken-1'
+  }
   return {
     groupName,
     headers,
@@ -20,5 +25,6 @@ export default function useMarksTableMachine (machine: any) {
     isLoaded,
     isFailure,
     sendRefresh,
+    getColor,
   }
 }

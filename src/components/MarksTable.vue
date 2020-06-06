@@ -18,6 +18,7 @@
       :search="search"
       :disable-pagination="true"
       :hide-default-footer="true"
+      fixed-header
       sort-by="name"
       item-key="id"
     >
@@ -26,11 +27,20 @@
         v-slot:[`item.${header.value}`]="{ item }"
       >
         <v-edit-dialog
-          :key="`${item.id}-${header.id}`"
+          :key="`${item.id}-${header.value}`"
           :return-value.sync="item[header.value]"
         >
-          {{ item[header.value] }}
-
+          <v-chip
+            v-if="!isNaN(item[header.value])"
+            label
+            :color="getColor(+item[header.value])"
+            dark
+          >
+            {{ item[header.value] }}
+          </v-chip>
+          <div v-if="isNaN(item[header.value])">
+            {{ item[header.value] }}
+          </div>
           <template v-slot:input>
             <tr>
               <td>0 &lt;</td>
