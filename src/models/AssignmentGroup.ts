@@ -6,7 +6,7 @@ export default interface AssignmentGroup {
   id: ID
   type: string
   parent_group: AssignmentGroup
-  children_groups: AssignmentGroup[]
+  child_groups: AssignmentGroup[]
   assignments: Assignment[]
   semester_discipline: SemesterDiscipline
 }
