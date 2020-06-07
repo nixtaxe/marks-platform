@@ -5,8 +5,11 @@ import SemesterDiscipline from '@/models/SemesterDiscipline'
 import TableHeader from '@/models/TableHeader'
 import TableItem from '@/models/TableItem'
 import getMarksDataForTable from '@/helpers/getMarksDataForTable'
+import ID from '@/models/ID'
+import Mark from '@/models/Mark'
 
 interface MarksTableContext {
+  semesterDisciplineId: ID
   user: User
   semesterDiscipline: SemesterDiscipline
   groupName: string
@@ -15,7 +18,11 @@ interface MarksTableContext {
   error: string
 }
 
-type MarksTableEvent = { type: 'REFRESH' }
+type MarksTableEvent =
+  | { type: 'REFRESH' }
+  | { type: 'CREATE_MARK'; mark: Mark }
+  | { type: 'UPDATE_MARK'; mark: Mark }
+  | { type: 'DELETE_MARK'; id: ID }
 
 class MarksTableMachine {
   @inject() marksService!: IMarksService
@@ -26,13 +33,54 @@ class MarksTableMachine {
         initial: 'loading',
         states: {
           loading: {
-            invoke: {
-              src: 'loadMarksTable',
-              onDone: {
-                target: 'loaded',
-                actions: 'saveMarksTable',
+            initial: 'refreshing',
+            states: {
+              refreshing: {
+                invoke: {
+                  src: 'loadMarksTable',
+                  onDone: {
+                    target: '#marksTable.loaded',
+                    actions: 'saveMarksTable',
+                  },
+                  onError: '#marksTable.error',
+                },
               },
-              onError: 'failure',
+              creatingMark: {
+                invoke: {
+                  src: 'createMark',
+                  onDone: {
+                    target: 'refreshing',
+                  },
+                  onError: {
+                    target: '#marksTable.loaded',
+                    actions: 'showError',
+                  },
+                },
+              },
+              updatingMark: {
+                invoke: {
+                  src: 'updateMark',
+                  onDone: {
+                    target: 'refreshing',
+                  },
+                  onError: {
+                    target: '#marksTable.loaded',
+                    actions: 'showError',
+                  },
+                },
+              },
+              deletingMark: {
+                invoke: {
+                  src: 'deleteMark',
+                  onDone: {
+                    target: 'refreshing',
+                  },
+                  onError: {
+                    target: '#marksTable.loaded',
+                    actions: 'showError',
+                  },
+                },
+              },
             },
           },
           loaded: {
@@ -41,12 +89,16 @@ class MarksTableMachine {
               idle: {},
             },
             on: {
-              REFRESH: 'loading',
+              REFRESH: '#marksTable.loading.refreshing',
+              CREATE_MARK: '#marksTable.loading.creatingMark',
+              UPDATE_MARK: '#marksTable.loading.updatingMark',
+              DELETE_MARK: '#marksTable.loading.deletingMark',
             },
           },
-          failure: {
+          error: {
+            entry: 'onError',
             on: {
-              REFRESH: 'loading',
+              REFRESH: 'loading.refreshing',
             },
           },
         },
@@ -66,11 +118,19 @@ class MarksTableMachine {
               semesterDiscipline: event.data,
             }
           }),
+          showError: (_context, event: any) => {
+            // eslint-disable-next-line no-console
+            console.error(event)
+          },
         },
         services: {
-          loadMarksTable: () => {
-            return this.marksService.getSemesterDiscipline('1')
-          },
+          loadMarksTable: () => this.marksService.getSemesterDiscipline('1'),
+          createMark: (_context, event) =>
+            this.marksService.createMark(event.mark),
+          deleteMark: (_context, event) =>
+            this.marksService.deleteMark(event.id),
+          updateMark: (_context, event) =>
+            this.marksService.updateMark(event.mark),
         },
       },
     )

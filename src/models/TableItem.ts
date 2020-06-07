@@ -2,5 +2,5 @@ import ID from './ID'
 
 export default interface TableItem {
   id: ID
-  name: string
+  name: any
 }

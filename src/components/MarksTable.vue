@@ -1,7 +1,7 @@
 <template>
   <v-card>
-    <v-card-title v-if="isLoaded">
-      {{ groupName }}
+    <v-card-title>
+      {{ groupName || 'Номер группы' }}
       <v-spacer />
       <v-text-field
         v-model="search"
@@ -26,27 +26,39 @@
         v-for="header in headers"
         v-slot:[`item.${header.value}`]="{ item }"
       >
-        <v-edit-dialog
+        <div
+          v-if="header.value === 'name'"
           :key="`${item.id}-${header.value}`"
-          :return-value.sync="item[header.value]"
         >
+          {{ item[header.value].value }}
+        </div>
+        <v-edit-dialog
+          v-else
+          :key="`${item.id}-${header.value}`"
+          :return-value.sync="item[header.value].value"
+          @save="performMutation(item[header.value], item.id, header.value)"
+        >
+          <div
+            v-if="
+              isNaN(item[header.value].value) || item[header.value].value === ''
+            "
+          >
+            {{ item[header.value].value }}
+          </div>
           <v-chip
-            v-if="!isNaN(item[header.value])"
+            v-else
             label
-            :color="getColor(+item[header.value])"
+            :color="getColor(+item[header.value].value)"
             dark
           >
-            {{ item[header.value] }}
+            {{ item[header.value].value }}
           </v-chip>
-          <div v-if="isNaN(item[header.value])">
-            {{ item[header.value] }}
-          </div>
           <template v-slot:input>
             <tr>
               <td>0 &lt;</td>
               <v-spacer />
               <v-text-field
-                v-model="item[header.value]"
+                v-model="item[header.value].value"
                 class="px-3"
                 label="Edit"
                 single-line
