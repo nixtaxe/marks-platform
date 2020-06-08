@@ -8,7 +8,9 @@
       class="flat mr-5"
       @click="sendLogout()"
     >
-      Выйти
+      <v-icon dark>
+        {{ logoutIcon }}
+      </v-icon>
     </v-btn>
   </v-toolbar>
 </template>
@@ -18,6 +20,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 import useToolbarMachine from '@/compositions/useToolbarMachine'
+import { mdiLogoutVariant } from '@mdi/js'
 
 @Component({
   setup (props: any) {
@@ -26,5 +29,6 @@ import useToolbarMachine from '@/compositions/useToolbarMachine'
 })
 export default class ToolBar extends Vue {
   @Prop() toolbarMachine: any
+  logoutIcon = mdiLogoutVariant
 }
 </script>
