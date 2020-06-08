@@ -1,16 +1,20 @@
-import { Machine, assign } from 'xstate'
+import { Machine, assign, send, forwardTo } from 'xstate'
 import toolbarMachine from '@/state-machines/ToolbarMachine'
 import { inject } from 'inversify-props'
 import IUserService from '@/services/IUserService'
 import router from '@/router'
 import marksTableMachine from '@/state-machines/MarksTableMachine'
 import creationButtonsMachine from './CreationButtonsMachine'
+import ID from '@/models/ID'
 
 interface MarksPageContext {
   user: User
 }
 
-type MarksPageEvent = { type: 'LOGOUT' }
+type MarksPageEvent =
+  | { type: 'LOGOUT' }
+  | { type: 'REFRESH' }
+  | { type: 'SELECT_SEMESTER_DISCIPLINE'; id: ID }
 
 class MarksPageMachine {
   @inject() userService!: IUserService
@@ -45,6 +49,15 @@ class MarksPageMachine {
                       data: {
                         user: (context: MarksPageContext) => context.user,
                       },
+                      onError: { actions: 'showError' },
+                    },
+                    on: {
+                      SELECT_SEMESTER_DISCIPLINE: {
+                        actions: [
+                          'notifyMarksTableMachine',
+                          'notifyCreationButtonsMachine',
+                        ],
+                      },
                     },
                   },
                   marksTable: {
@@ -54,14 +67,19 @@ class MarksPageMachine {
                       data: {
                         user: (context: MarksPageContext) => context.user,
                       },
+                      onError: { actions: 'showError' },
                     },
                   },
                   creationButtons: {
                     invoke: {
                       id: 'creationButtonsMachine',
                       src: creationButtonsMachine,
+                      onError: { actions: 'showError' },
                     },
                   },
+                },
+                on: {
+                  REFRESH: { actions: 'sendRefresh' },
                 },
               },
             },
@@ -85,6 +103,13 @@ class MarksPageMachine {
           }),
           logout: () => this.userService.logout(),
           openLandingPage: () => router.replace('/'),
+          sendRefresh: send('REFRESH', { to: 'marksTableMachine' }),
+          notifyMarksTableMachine: forwardTo('marksTableMachine'),
+          notifyCreationButtonsMachine: forwardTo('creationButtonsMachine'),
+          showError: (_context, event: any) => {
+            // eslint-disable-next-line no-console
+            console.error(event)
+          },
         },
         services: {
           loadUserInfo: () => this.userService.getUserInfo(),

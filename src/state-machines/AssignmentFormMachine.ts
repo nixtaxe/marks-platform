@@ -25,7 +25,7 @@ interface AssignmentFormContext {
   success: string
 }
 
-const assignmentContext = <AssignmentFormContext>{
+export const assignmentContext = <AssignmentFormContext>{
   mode: FormMode.Creating,
   values: <AssignmentFormValues>{
     assignment: <any>{},

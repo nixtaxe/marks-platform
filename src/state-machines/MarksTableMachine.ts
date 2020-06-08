@@ -20,6 +20,7 @@ interface MarksTableContext {
 
 type MarksTableEvent =
   | { type: 'REFRESH' }
+  | { type: 'SELECT_SEMESTER_DISCIPLINE'; id: ID }
   | { type: 'CREATE_MARK'; mark: Mark }
   | { type: 'UPDATE_MARK'; mark: Mark }
   | { type: 'DELETE_MARK'; id: ID }
@@ -30,7 +31,7 @@ class MarksTableMachine {
     return Machine<MarksTableContext, MarksTableEvent>(
       {
         id: 'marksTable',
-        initial: 'loading',
+        initial: 'loaded',
         states: {
           loading: {
             initial: 'refreshing',
@@ -90,14 +91,22 @@ class MarksTableMachine {
             },
             on: {
               REFRESH: '#marksTable.loading.refreshing',
+              SELECT_SEMESTER_DISCIPLINE: {
+                target: 'loading.refreshing',
+                actions: 'setSemesterDisciplineId',
+              },
               CREATE_MARK: '#marksTable.loading.creatingMark',
               UPDATE_MARK: '#marksTable.loading.updatingMark',
               DELETE_MARK: '#marksTable.loading.deletingMark',
             },
           },
           error: {
-            entry: 'onError',
+            entry: 'showError',
             on: {
+              SELECT_SEMESTER_DISCIPLINE: {
+                target: 'loading.refreshing',
+                actions: 'setSemesterDisciplineId',
+              },
               REFRESH: 'loading.refreshing',
             },
           },
@@ -105,7 +114,7 @@ class MarksTableMachine {
       },
       {
         actions: {
-          saveMarksTable: assign((context, event: any) => {
+          saveMarksTable: assign((_context, event: any) => {
             const {
               groupName,
               headers,
@@ -122,9 +131,15 @@ class MarksTableMachine {
             // eslint-disable-next-line no-console
             console.error(event)
           },
+          setSemesterDisciplineId: assign({
+            semesterDisciplineId: (_context, event: any) => event.id,
+          }),
         },
         services: {
-          loadMarksTable: () => this.marksService.getSemesterDiscipline('1'),
+          loadMarksTable: (context) =>
+            this.marksService.getSemesterDiscipline(
+              context.semesterDisciplineId,
+            ),
           createMark: (_context, event) =>
             this.marksService.createMark(event.mark),
           deleteMark: (_context, event) =>
