@@ -6,6 +6,9 @@ import Mark from '@/models/Mark'
 import ID from '@/models/ID'
 
 export default class MarksService implements IMarksService {
+  getSemesterDisciplines (): Promise<SemesterDiscipline[]> {
+    throw new Error('Method not implemented.')
+  }
   deleteMark (_id: ID): Promise<Mark> {
     throw new Error('Method not implemented.')
   }

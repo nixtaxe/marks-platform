@@ -7,13 +7,22 @@ import CreateMarkMutation from './graphql/CreateMarkMutation'
 import Mark from '@/models/Mark'
 import DeleteMarkMutation from './graphql/DeleteMarkMutation'
 import UpdateMarkMutation from './graphql/UpdateMarkMutation'
+import GetSemesterDisciplinesQuery from './graphql/GetSemesterDisciplinesQuery'
 
 export default class MarksService implements IMarksService {
+  async getSemesterDisciplines (): Promise<SemesterDiscipline[]> {
+    const result = await httpClient.query({
+      query: GetSemesterDisciplinesQuery,
+    })
+
+    return result.data.data
+  }
+
   async getSemesterDiscipline (id: ID): Promise<SemesterDiscipline> {
     const result = await httpClient.query({
       query: GetSemesterDiscipline,
       variables: { id },
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'no-cache',
     })
 
     return result.data.data
