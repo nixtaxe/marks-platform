@@ -1,11 +1,33 @@
 <template>
-  <v-toolbar class="indigo">
-    <v-spacer />
-    <v-toolbar-title class="white--text mr-5">
+  <v-toolbar
+    dark
+    color="blue darken-3"
+  >
+    <v-autocomplete
+      v-model="selectSemesterDiscipline"
+      :loading="loading"
+      :items="items"
+      :search-input.sync="searchSemesterDiscipline"
+      :clearable="true"
+      solo-inverted
+      flat
+      hide-no-data
+      hide-details
+      cache-items
+      clear-icon="mdi-clear"
+      label="Найти журнал оценок"
+      dense
+      return-object
+      @input="sendSelectSemesterDiscipline($event)"
+    />
+    <v-toolbar-title class="white--text mx-5">
       {{ name }}
     </v-toolbar-title>
     <v-btn
-      class="flat mr-5"
+      fab
+      small
+      text
+      class="flat blue darken-3"
       @click="sendLogout()"
     >
       <v-icon dark>
