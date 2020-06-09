@@ -8,6 +8,7 @@ import ID from '@/models/ID'
 
 interface AssignmentFormRules {
   titleRules: Function[]
+  assignmentGroupRules: Function[]
 }
 
 interface AssignmentFormValues {
@@ -34,6 +35,7 @@ export const assignmentContext = <AssignmentFormContext>{
   },
   rules: {
     titleRules: [(v: string) => !!v || 'Введите название задания'],
+    assignmentGroupRules: [(v: string) => !!v || 'Выберите группу для задания'],
   },
   error: '',
   success: 'Задание создано',

@@ -42,6 +42,7 @@ export default function useAssignmentFormMachine (machine: any) {
     isSuccess,
     wasPreloaded,
     titleRules: machine.state.context.rules.titleRules,
+    assignmentGroupRules: machine.state.context.rules.assignmentGroupRules,
     send,
     sendSubmit,
     sendChange,

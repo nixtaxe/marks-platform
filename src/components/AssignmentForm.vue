@@ -71,6 +71,8 @@
         </v-dialog>
         <v-select
           v-model="selectedAssignmentGroup"
+          :rules="assignmentGroupRules"
+          required
           :items="assignmentGroups"
           name="item"
           item-text="name"
