@@ -1,4 +1,4 @@
-import { Machine, assign } from 'xstate'
+import { Machine, assign, sendParent } from 'xstate'
 import assignmentFormMachine, {
   assignmentContext,
 } from './AssignmentFormMachine'
@@ -10,6 +10,7 @@ interface CreationButtonsContext {
 }
 
 type CreationButtonsEvent =
+  | { type: 'REFRESH' }
   | { type: 'OPEN_ASSIGNMENT_FORM' }
   | { type: 'CLOSE_ASSIGNMENT_FORM' }
   | { type: 'SELECT_SEMESTER_DISCIPLINE'; id: ID }
@@ -51,10 +52,12 @@ const creationButtonsMachine = Machine<
       SELECT_SEMESTER_DISCIPLINE: {
         actions: 'setSemesterDisciplineId',
       },
+      REFRESH: { actions: 'sendRefresh' },
     },
   },
   {
     actions: {
+      sendRefresh: sendParent('REFRESH'),
       setSemesterDisciplineId: assign({
         semesterDisciplineId: (_context, event: any) => event.id,
       }),

@@ -1,4 +1,4 @@
-import { Machine, assign } from 'xstate'
+import { Machine, assign, sendParent } from 'xstate'
 
 export enum FormMode {
   Showing,
@@ -92,7 +92,7 @@ const formMachine = Machine<FormMachineContext, FormEvents>(
         },
       },
       success: {
-        entry: 'onSuccess',
+        entry: ['onSuccess', 'sendRefresh'],
         on: {
           CLOSE_FORM: 'closed',
         },
@@ -113,6 +113,7 @@ const formMachine = Machine<FormMachineContext, FormEvents>(
       onPreloadError: assign({
         error: (_context, event: any) => event.message,
       }),
+      sendRefresh: sendParent('REFRESH'),
     },
     guards: {
       isShowing: (context, _event) => context.mode === FormMode.Showing,
