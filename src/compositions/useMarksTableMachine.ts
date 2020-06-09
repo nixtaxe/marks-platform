@@ -4,6 +4,9 @@ import Mark from '@/models/Mark'
 
 export default function useMarksTableMachine (machine: any) {
   const groupName = computed(() => machine.state.context.groupName)
+  const assignmentGroups = computed(
+    () => machine.state.context.assignmentGroups,
+  )
   const headers = computed(() => machine.state.context.headers)
   const studentMarks = computed(() => machine.state.context.studentMarks)
 
@@ -42,6 +45,7 @@ export default function useMarksTableMachine (machine: any) {
   }
   return {
     groupName,
+    assignmentGroups,
     headers,
     studentMarks,
     isLoading,

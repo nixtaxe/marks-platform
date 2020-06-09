@@ -22,6 +22,21 @@
       sort-by="name"
       item-key="id"
     >
+      <template v-slot:header>
+        <thead>
+          <tr>
+            <th />
+            <th
+              v-for="ag in assignmentGroups"
+              :key="ag.id"
+              :colspan="ag.width"
+              class="title"
+            >
+              {{ ag.text }}
+            </th>
+          </tr>
+        </thead>
+      </template>
       <template
         v-for="header in headers"
         v-slot:[`item.${header.value}`]="{ item }"

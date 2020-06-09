@@ -13,6 +13,7 @@ interface MarksTableContext {
   user: User
   semesterDiscipline: SemesterDiscipline
   groupName: string
+  assignmentGroups: any[]
   headers: TableHeader[]
   studentMarks: TableItem[]
   error: string
@@ -117,11 +118,13 @@ class MarksTableMachine {
           saveMarksTable: assign((_context, event: any) => {
             const {
               groupName,
+              assignmentGroups,
               headers,
               items: studentMarks,
             } = getMarksDataForTable(event.data)
             return {
               groupName,
+              assignmentGroups,
               headers,
               studentMarks,
               semesterDiscipline: event.data,

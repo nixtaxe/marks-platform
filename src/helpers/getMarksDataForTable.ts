@@ -10,6 +10,11 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
   const studentAssignments = groupMarks.assignment_groups.flatMap(
     (ag) => ag.assignments,
   )
+  const assignmentGroups = groupMarks.assignment_groups.flatMap((ag) => ({
+    text: ag.name,
+    value: ag.id,
+    width: ag.assignments.length,
+  }))
   const headers: TableHeader[] = [
     {
       text: 'Студент',
@@ -50,12 +55,12 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
         id: mark.id,
         value: mark.value,
         student: mark.student.id,
-        assignment: mark.assignment,
+        assignment: mark.assignment.id,
       }
       // @ts-ignore
       items[itemId][assignment.id] = markData
     })
   })
 
-  return { groupName, headers, items }
+  return { groupName, assignmentGroups, headers, items }
 }

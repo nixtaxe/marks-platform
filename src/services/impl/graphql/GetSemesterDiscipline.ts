@@ -29,6 +29,7 @@ export default gql`
       }
       assignment_groups {
         id
+        name
         assignments {
           id
           title
@@ -36,6 +37,9 @@ export default gql`
             id
             value
             student {
+              id
+            }
+            assignment {
               id
             }
           }
