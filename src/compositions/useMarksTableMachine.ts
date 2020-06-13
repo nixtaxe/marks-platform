@@ -1,6 +1,7 @@
 import { computed } from '@vue/composition-api'
 import ID from '@/models/ID'
 import Mark from '@/models/Mark'
+import MarksConstraint from '@/models/MarksConstraint'
 
 export default function useMarksTableMachine (machine: any) {
   const groupName = computed(() => machine.state.context.groupName)
@@ -57,6 +58,19 @@ export default function useMarksTableMachine (machine: any) {
       sendCreateMark(newMark)
     }
   }
+
+  const checkKey = ($event: any, marksConstraint: MarksConstraint) => {
+    const resultValue = $event.target.value + $event.key
+    const parsedValue = parseFloat(resultValue)
+    if (
+      isNaN(resultValue) ||
+      parsedValue < marksConstraint.minValue ||
+      parsedValue > marksConstraint.maxValue
+    ) {
+      $event.preventDefault()
+    }
+  }
+
   return {
     groupName,
     assignmentGroups,
@@ -73,5 +87,6 @@ export default function useMarksTableMachine (machine: any) {
     sendOpenAssignmentForm,
     sendCloseAssignmentForm,
     getColor,
+    checkKey,
   }
 }

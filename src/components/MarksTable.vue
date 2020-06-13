@@ -92,17 +92,18 @@
           </v-chip>
           <template v-slot:input>
             <tr>
-              <td>0 &lt;</td>
+              <td>{{ header.marks_constraint.minValue }} &lt;=</td>
               <v-spacer />
               <v-text-field
                 v-model="item[header.value].value"
                 class="px-3"
-                label="Edit"
+                label="Оценка"
                 single-line
                 width="25px"
+                @keypress="checkKey($event, header.marks_constraint)"
               />
               <v-spacer />
-              <td>&lt; 10</td>
+              <td>&lt;= {{ header.marks_constraint.maxValue }}</td>
             </tr>
           </template>
         </v-edit-dialog>
