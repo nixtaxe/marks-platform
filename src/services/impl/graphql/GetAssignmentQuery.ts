@@ -6,6 +6,10 @@ export default gql`
       id
       title
       deadlineDate
+      marks_constraint {
+        id
+        name
+      }
       assignment_group {
         id
         name

@@ -9,6 +9,9 @@ import GetAssignmentGroupQuery from './graphql/GetAssignmentGroupsQuery'
 import GetAssignmentQuery from './graphql/GetAssignmentQuery'
 import UpdateAssignmentMutation from './graphql/UpdateAssignmentMutation'
 import DeleteAssignmentMutation from './graphql/DeleteAssignmentMutation'
+import MarksConstraint from '@/models/MarksConstraint'
+import AssignmentSelections from '@/models/AssignmentSelections'
+import GetMarksConstraintsQuery from './graphql/GetMarksConstraintsQuery'
 
 export default class AssignmentService implements IAssignmentService {
   async getAssignment (id: ID): Promise<Assignment> {
@@ -16,6 +19,24 @@ export default class AssignmentService implements IAssignmentService {
       query: GetAssignmentQuery,
       variables: { id },
       fetchPolicy: 'no-cache',
+    })
+
+    return result.data.data
+  }
+
+  async getAssignmentSelections (
+    semesterDisciplineId: ID,
+  ): Promise<AssignmentSelections> {
+    const assignmentGroups = await this.getAssignmentGroups(
+      semesterDisciplineId,
+    )
+    const marksConstraints = await this.getMarksConstraints()
+    return { assignmentGroups, marksConstraints }
+  }
+
+  async getMarksConstraints (): Promise<MarksConstraint[]> {
+    const result = await httpClient.query({
+      query: GetMarksConstraintsQuery,
     })
 
     return result.data.data
