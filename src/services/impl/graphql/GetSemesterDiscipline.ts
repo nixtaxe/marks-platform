@@ -33,6 +33,14 @@ export default gql`
         assignments {
           id
           title
+          marks_constraint {
+            id
+            minValue
+            maxValue
+            satisfactory
+            good
+            excellent
+          }
           marks {
             id
             value

@@ -26,6 +26,7 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
   ].concat(
     studentAssignments.map((x) => {
       return {
+        ...x,
         text: x.title,
         value: x.id,
         sortable: false,

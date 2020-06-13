@@ -31,7 +31,7 @@
               v-for="assignmentGroup in assignmentGroups"
               :key="assignmentGroup.id"
               :colspan="assignmentGroup.width"
-              class="title"
+              class="subtitle-2"
             >
               {{ assignmentGroup.text }}
             </th>
@@ -85,7 +85,7 @@
           <v-chip
             v-else
             label
-            :color="getColor(+item[header.value].value)"
+            :color="getColor(+item[header.value].value, header)"
             dark
           >
             {{ item[header.value].value }}

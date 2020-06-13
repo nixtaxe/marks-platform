@@ -32,11 +32,12 @@ export default function useMarksTableMachine (machine: any) {
   const sendOpenAssignmentForm = (id: ID) =>
     send('OPEN_ASSIGNMENT_FORM', { id })
   const sendCloseAssignmentForm = () => send('CLOSE_ASSIGNMENT_FORM')
-  const getColor = (mark: number, bad = 5, good = 7, excellent = 10) => {
-    if (mark <= bad) return 'red'
-    else if (mark <= good) return 'yellow'
-    else if (mark < excellent) return 'green'
-    else if (mark === excellent) return 'teal darken-1'
+  const getColor = (mark: number, header: any) => {
+    const { satisfactory, good, excellent } = header.marks_constraint
+    if (mark >= excellent) return 'teal'
+    else if (mark >= good) return 'green'
+    else if (mark >= satisfactory) return 'orange'
+    else return 'red'
   }
   const performMutation = (mark: Mark, student: ID, assignment: ID) => {
     if ('id' in mark) {
