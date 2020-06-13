@@ -48,17 +48,31 @@ class AssignmentFormMachine {
   public create () {
     return formMachine.withConfig({
       services: {
-        onSubmit: (context: AssignmentFormContext, _event: any) => {
+        onSubmit: (context: AssignmentFormContext, event: any) => {
           assign({ error: () => '' })
-          return this.assignmentService.createAssignment(
-            context.values.assignment,
-          )
+          if (event.type === 'DELETE')
+            return this.assignmentService.deleteAssignment(
+              context.values.assignment.id,
+            )
+          else if ('id' in context.values.assignment)
+            return this.assignmentService.updateAssignment(
+              context.values.assignment,
+            )
+          else
+            return this.assignmentService.createAssignment(
+              context.values.assignment,
+            )
         },
         onPreload: (context: AssignmentFormContext, _event: any) => {
           assign({ error: () => '' })
-          return this.assignmentService.getAssignmentGroups(
-            context.values.semesterDisciplineId,
-          )
+          if (context.mode === FormMode.Showing)
+            return this.assignmentService.getAssignment(
+              context.values.assignment.id,
+            )
+          else
+            return this.assignmentService.getAssignmentGroups(
+              context.values.semesterDisciplineId,
+            )
         },
       },
       actions: {
@@ -72,10 +86,19 @@ class AssignmentFormMachine {
           }),
         }),
         onPreloadDone: assign({
-          values: (context, event: any) => ({
-            ...context.values,
-            assignmentGroups: event.data,
-          }),
+          values: (context, event: any) => {
+            if (context.mode === FormMode.Showing)
+              return {
+                ...context.values,
+                assignment: event.data,
+                assignmentGroups: [event.data.assignment_group],
+              }
+            else
+              return {
+                ...context.values,
+                assignmentGroups: event.data,
+              }
+          },
         }),
         onDone: assign({
           values: (context, event: any) => ({
@@ -90,7 +113,7 @@ class AssignmentFormMachine {
   }
 }
 
-const assignmentFormMachine = new AssignmentFormMachine()
-  .create()
-  .withContext(assignmentContext)
-export default assignmentFormMachine
+const getAssignmentFormMachine = () =>
+  new AssignmentFormMachine().create().withContext(assignmentContext)
+
+export default getAssignmentFormMachine

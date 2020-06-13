@@ -19,6 +19,8 @@ type FormEvents =
   | { type: 'SUBMIT' }
   | { type: 'ERROR'; data: string }
   | { type: 'CLOSE_FORM' }
+  | { type: 'EDIT' }
+  | { type: 'DELETE' }
 
 const formMachine = Machine<FormMachineContext, FormEvents>(
   {
@@ -56,6 +58,8 @@ const formMachine = Machine<FormMachineContext, FormEvents>(
       },
       showing: {
         on: {
+          EDIT: { target: 'preloading', actions: 'onEditing' },
+          DELETE: 'submitting',
           CLOSE_FORM: 'closed',
         },
       },
@@ -114,6 +118,7 @@ const formMachine = Machine<FormMachineContext, FormEvents>(
         error: (_context, event: any) => event.message,
       }),
       sendRefresh: sendParent('REFRESH'),
+      onEditing: assign({ mode: (_context, _event) => FormMode.Editing }),
     },
     guards: {
       isShowing: (context, _event) => context.mode === FormMode.Showing,

@@ -3,6 +3,7 @@ import assignmentFormMachine, {
   assignmentContext,
 } from './AssignmentFormMachine'
 import ID from '@/models/ID'
+import { FormMode } from './FormMachine'
 
 interface CreationButtonsContext {
   semesterDisciplineId: ID
@@ -39,6 +40,7 @@ const creationButtonsMachine = Machine<
             const newContext = assignmentContext
             newContext.values.semesterDisciplineId =
               context.semesterDisciplineId
+            newContext.mode = FormMode.Editing
             return newContext
           },
           onDone: 'idle',

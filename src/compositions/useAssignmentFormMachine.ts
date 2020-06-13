@@ -1,4 +1,4 @@
-import { computed, ref } from '@vue/composition-api'
+import { computed, ref, watch } from '@vue/composition-api'
 
 export default function useAssignmentFormMachine (machine: any) {
   const state = computed(() => machine.state)
@@ -7,13 +7,28 @@ export default function useAssignmentFormMachine (machine: any) {
   const assignmentGroups = computed(
     () => machine.state.context.values.assignmentGroups,
   )
+  var title = ref('')
+  var deadlineDate = ref('')
+  var selectedAssignmentGroup = ref(null)
+
   const isError = computed(() => machine.state.matches({ editing: 'error' }))
+  const isShowing = computed(() => machine.state.matches('showing'))
   const isEditing = computed(() => machine.state.matches('editing'))
   const isSubmitting = computed(() => machine.state.matches('submitting'))
   const isSuccess = computed(() => machine.state.matches('success'))
   const wasPreloaded = computed(() => !machine.state.matches('preloading'))
 
+  watch(isShowing, (value) => {
+    if (value) {
+      title.value = machine.state.context.values.assignment!.title
+      deadlineDate.value = machine.state.context.values.assignment!.deadlineDate
+      selectedAssignmentGroup.value = machine.state.context.values.assignment!.assignment_group!.id
+    }
+  })
+
   const send = machine.send
+  const sendEdit = () => machine.send('EDIT')
+  const sendDelete = () => machine.send('DELETE')
   const sendSubmit = () => machine.send({ type: 'SUBMIT' })
   const sendChange = ({ key, value }: { key: string; value: string }) =>
     machine.send({ type: 'CHANGE', key, value })
@@ -36,7 +51,11 @@ export default function useAssignmentFormMachine (machine: any) {
     context,
     form,
     assignmentGroups,
+    title,
+    deadlineDate,
+    selectedAssignmentGroup,
     isError,
+    isShowing,
     isEditing,
     isSubmitting,
     isSuccess,
@@ -44,6 +63,8 @@ export default function useAssignmentFormMachine (machine: any) {
     titleRules: machine.state.context.rules.titleRules,
     assignmentGroupRules: machine.state.context.rules.assignmentGroupRules,
     send,
+    sendEdit,
+    sendDelete,
     sendSubmit,
     sendChange,
     sendError,
