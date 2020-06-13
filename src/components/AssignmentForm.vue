@@ -44,6 +44,7 @@
               v-model="deadlineDate"
               label="День сдачи"
               readonly
+              :disabled="!isEditing"
               v-on="on"
             />
           </template>
@@ -74,6 +75,7 @@
           :rules="assignmentGroupRules"
           required
           :items="assignmentGroups"
+          :disabled="!isEditing"
           name="item"
           item-text="name"
           item-value="id"
@@ -88,6 +90,7 @@
         <v-card-actions>
           <v-spacer />
           <v-btn
+            v-if="isEditing"
             x-large
             min-width="150px"
             color="primary"
@@ -95,6 +98,24 @@
             :loading="isSubmitting"
           >
             Сохранить
+          </v-btn>
+          <v-btn
+            v-if="isShowing"
+            x-large
+            min-width="150px"
+            color="primary"
+            @click="sendEdit()"
+          >
+            Редактировать
+          </v-btn>
+          <v-btn
+            v-if="isShowing"
+            x-large
+            min-width="150px"
+            color="primary"
+            @click="sendDelete()"
+          >
+            Удалить
           </v-btn>
           <v-spacer />
         </v-card-actions>
@@ -117,9 +138,9 @@ import useAssignmentFormMachine from '@/compositions/useAssignmentFormMachine'
 })
 export default class AssignmentForm extends Vue {
   @Prop() assignmentFormMachine: any
-  title: string = ''
+  // title: string = ''
   deadlineMenu = false
-  deadlineDate: string = new Date().toISOString().substring(0, 10)
-  selectedAssignmentGroup = null
+  // deadlineDate: string = new Date().toISOString().substring(0, 10)
+  // selectedAssignmentGroup = null
 }
 </script>

@@ -19,21 +19,43 @@
       :disable-pagination="true"
       :hide-default-footer="true"
       fixed-header
+      hide-default-header
       sort-by="name"
       item-key="id"
     >
-      <template v-slot:header>
+      <template v-slot:header="{ props: { headers } }">
         <thead>
           <tr>
             <th />
             <th
-              v-for="ag in assignmentGroups"
-              :key="ag.id"
-              :colspan="ag.width"
+              v-for="assignmentGroup in assignmentGroups"
+              :key="assignmentGroup.id"
+              :colspan="assignmentGroup.width"
               class="title"
             >
-              {{ ag.text }}
+              {{ assignmentGroup.text }}
             </th>
+          </tr>
+          <tr>
+            <th
+              v-for="header in headers"
+              :key="header.value"
+              @click="sendOpenAssignmentForm(header.value)"
+            >
+              {{ header.text }}
+            </th>
+            <v-dialog
+              max-width="480px"
+              max-height="320px"
+              :value="isAssignmentForm"
+              :persistent="isPersistentAssignmentForm"
+              @input="sendCloseAssignmentForm()"
+            >
+              <AssignmentForm
+                v-if="isAssignmentForm"
+                :assignment-form-machine="assignmentFormMachine"
+              />
+            </v-dialog>
           </tr>
         </thead>
       </template>
@@ -94,8 +116,12 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 import useMarksTableMachine from '@/compositions/useMarksTableMachine'
+import AssignmentForm from '@/components/AssignmentForm.vue'
 
 @Component({
+  components: {
+    AssignmentForm,
+  },
   setup (props: any) {
     return { ...useMarksTableMachine(props.marksTableMachine) }
   },

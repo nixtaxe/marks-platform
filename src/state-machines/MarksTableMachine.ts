@@ -7,6 +7,10 @@ import TableItem from '@/models/TableItem'
 import getMarksDataForTable from '@/helpers/getMarksDataForTable'
 import ID from '@/models/ID'
 import Mark from '@/models/Mark'
+import assignmentFormMachine, {
+  assignmentContext,
+} from './AssignmentFormMachine'
+import { FormMode } from './FormMachine'
 
 interface MarksTableContext {
   semesterDisciplineId: ID
@@ -25,6 +29,8 @@ type MarksTableEvent =
   | { type: 'CREATE_MARK'; mark: Mark }
   | { type: 'UPDATE_MARK'; mark: Mark }
   | { type: 'DELETE_MARK'; id: ID }
+  | { type: 'OPEN_ASSIGNMENT_FORM'; id: ID }
+  | { type: 'CLOSE_ASSIGNMENT_FORM' }
 
 class MarksTableMachine {
   @inject() marksService!: IMarksService
@@ -89,16 +95,32 @@ class MarksTableMachine {
             initial: 'idle',
             states: {
               idle: {},
+              assignmentForm: {
+                invoke: {
+                  id: 'assignmentFormMachine',
+                  src: assignmentFormMachine,
+                  data: (context: MarksTableContext, event: any) => {
+                    const newContext = assignmentContext
+                    newContext.values.semesterDisciplineId =
+                      context.semesterDisciplineId
+                    newContext.mode = FormMode.Showing
+                    newContext.values.assignment.id = event.id
+                    return newContext
+                  },
+                },
+              },
             },
             on: {
               REFRESH: '#marksTable.loading.refreshing',
               SELECT_SEMESTER_DISCIPLINE: {
-                target: 'loading.refreshing',
+                target: '#marksTable.loading.refreshing',
                 actions: 'setSemesterDisciplineId',
               },
               CREATE_MARK: '#marksTable.loading.creatingMark',
               UPDATE_MARK: '#marksTable.loading.updatingMark',
               DELETE_MARK: '#marksTable.loading.deletingMark',
+              OPEN_ASSIGNMENT_FORM: '.assignmentForm',
+              CLOSE_ASSIGNMENT_FORM: '.idle',
             },
           },
           error: {
