@@ -15,6 +15,7 @@ export default class AssignmentService implements IAssignmentService {
     const result = await httpClient.query({
       query: GetAssignmentQuery,
       variables: { id },
+      fetchPolicy: 'no-cache',
     })
 
     return result.data.data
@@ -33,9 +34,10 @@ export default class AssignmentService implements IAssignmentService {
     const id = assignment.id
     delete assignment.id
 
-    const assignment_group = assignment.assignment_group.id
-    delete assignment.assignment_group
-    assignment.assignment_group = <any>assignment_group
+    if (typeof assignment.assignment_group === 'object') {
+      const assignmentGroupId = assignment.assignment_group.id
+      assignment.assignment_group = <any>assignmentGroupId
+    }
 
     const result = await httpClient.mutate({
       mutation: UpdateAssignmentMutation,
