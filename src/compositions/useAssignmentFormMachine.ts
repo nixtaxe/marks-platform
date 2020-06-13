@@ -7,9 +7,13 @@ export default function useAssignmentFormMachine (machine: any) {
   const assignmentGroups = computed(
     () => machine.state.context.values.assignmentGroups,
   )
+  const marksConstraints = computed(
+    () => machine.state.context.values.marksConstraints,
+  )
   var title = ref('')
   var deadlineDate = ref('')
   var selectedAssignmentGroup = ref(null)
+  var selectedMarksConstraint = ref(null)
 
   const isError = computed(() => machine.state.matches({ editing: 'error' }))
   const isShowing = computed(() => machine.state.matches('showing'))
@@ -23,6 +27,7 @@ export default function useAssignmentFormMachine (machine: any) {
       title.value = machine.state.context.values.assignment!.title
       deadlineDate.value = machine.state.context.values.assignment!.deadlineDate
       selectedAssignmentGroup.value = machine.state.context.values.assignment!.assignment_group!.id
+      selectedMarksConstraint.value = machine.state.context.values.assignment!.marks_constraint!.id
     }
   })
 
@@ -51,9 +56,11 @@ export default function useAssignmentFormMachine (machine: any) {
     context,
     form,
     assignmentGroups,
+    marksConstraints,
     title,
     deadlineDate,
     selectedAssignmentGroup,
+    selectedMarksConstraint,
     isError,
     isShowing,
     isEditing,
@@ -62,6 +69,7 @@ export default function useAssignmentFormMachine (machine: any) {
     wasPreloaded,
     titleRules: machine.state.context.rules.titleRules,
     assignmentGroupRules: machine.state.context.rules.assignmentGroupRules,
+    marksConstraintRules: machine.state.context.rules.marksConstraintRules,
     send,
     sendEdit,
     sendDelete,

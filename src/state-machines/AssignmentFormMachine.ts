@@ -31,11 +31,13 @@ export const assignmentContext = <AssignmentFormContext>{
   values: <AssignmentFormValues>{
     assignment: <any>{},
     assignmentGroups: [],
+    marksConstraints: [],
     semesterDisciplineId: '1',
   },
   rules: {
     titleRules: [(v: string) => !!v || 'Введите название задания'],
     assignmentGroupRules: [(v: string) => !!v || 'Выберите группу для задания'],
+    marksConstraintRules: [(v: string) => !!v || 'Выберите тип оценки'],
   },
   error: '',
   success: 'Задание создано',
@@ -70,7 +72,7 @@ class AssignmentFormMachine {
               context.values.assignment.id,
             )
           else
-            return this.assignmentService.getAssignmentGroups(
+            return this.assignmentService.getAssignmentSelections(
               context.values.semesterDisciplineId,
             )
         },
@@ -92,11 +94,13 @@ class AssignmentFormMachine {
                 ...context.values,
                 assignment: event.data,
                 assignmentGroups: [event.data.assignment_group],
+                marksConstraints: [event.data.marks_constraint],
               }
             else
               return {
                 ...context.values,
-                assignmentGroups: event.data,
+                assignmentGroups: event.data.assignmentGroups,
+                marksConstraints: event.data.marksConstraints,
               }
           },
         }),

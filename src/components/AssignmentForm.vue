@@ -87,6 +87,23 @@
             })
           "
         />
+        <v-select
+          v-model="selectedMarksConstraint"
+          :rules="marksConstraintRules"
+          required
+          :items="marksConstraints"
+          :disabled="!isEditing"
+          name="item"
+          item-text="name"
+          item-value="id"
+          label="Тип оценки"
+          @change="
+            sendChange({
+              key: 'marks_constraint',
+              value: selectedMarksConstraint,
+            })
+          "
+        />
         <v-card-actions>
           <v-spacer />
           <v-btn
