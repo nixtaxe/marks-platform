@@ -2,6 +2,9 @@ import { Machine, assign, sendParent } from 'xstate'
 import assignmentFormMachine, {
   assignmentContext,
 } from './AssignmentFormMachine'
+import assignmentGroupFormMachine, {
+  assignmentGroupContext,
+} from './AssignmentGroupFormMachine'
 import ID from '@/models/ID'
 import { FormMode } from './FormMachine'
 
@@ -13,7 +16,9 @@ interface CreationButtonsContext {
 type CreationButtonsEvent =
   | { type: 'REFRESH' }
   | { type: 'OPEN_ASSIGNMENT_FORM' }
+  | { type: 'OPEN_ASSIGNMENT_GROUP_FORM' }
   | { type: 'CLOSE_ASSIGNMENT_FORM' }
+  | { type: 'CLOSE_ASSIGNMENT_GROUP_FORM' }
   | { type: 'SELECT_SEMESTER_DISCIPLINE'; id: ID }
 
 const creationButtonsMachine = Machine<
@@ -30,6 +35,7 @@ const creationButtonsMachine = Machine<
       idle: {
         on: {
           OPEN_ASSIGNMENT_FORM: 'assignmentForm',
+          OPEN_ASSIGNMENT_GROUP_FORM: 'assignmentGroupForm',
         },
       },
       assignmentForm: {
@@ -47,6 +53,24 @@ const creationButtonsMachine = Machine<
         },
         on: {
           CLOSE_ASSIGNMENT_FORM: 'idle',
+        },
+      },
+      assignmentGroupForm: {
+        invoke: {
+          id: 'assignmentGroupFormMachine',
+          src: assignmentGroupFormMachine,
+          data: (context: CreationButtonsContext, _event: any) => {
+            const newContext = assignmentGroupContext
+            newContext.values.assignmentGroup.semester_discipline = <any>(
+              context.semesterDisciplineId
+            )
+            newContext.mode = FormMode.Editing
+            return newContext
+          },
+          onDone: 'idle',
+        },
+        on: {
+          CLOSE_ASSIGNMENT_GROUP_FORM: 'idle',
         },
       },
     },

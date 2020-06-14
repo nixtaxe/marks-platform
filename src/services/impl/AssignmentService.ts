@@ -92,6 +92,7 @@ export default class AssignmentService implements IAssignmentService {
     const result = await httpClient.query({
       query: GetAssignmentGroupsQuery,
       variables: { semesterDisciplineId },
+      fetchPolicy: 'no-cache',
     })
 
     return result.data.data
@@ -101,6 +102,7 @@ export default class AssignmentService implements IAssignmentService {
     const result = await httpClient.query({
       query: GetAssignmentGroupQuery,
       variables: { id },
+      fetchPolicy: 'no-cache',
     })
 
     return result.data

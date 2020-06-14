@@ -6,6 +6,26 @@
     <v-btn
       class="flat"
       :block="false"
+      @click="sendOpenAssignmentGroupForm()"
+    >
+      Добавить группу заданий
+    </v-btn>
+    <v-dialog
+      max-width="480px"
+      max-height="320px"
+      :value="isAssignmentGroupForm"
+      :persistent="isPersistentAssignmentGroupForm"
+      @input="sendCloseAssignmentGroupForm()"
+    >
+      <AssignmentGroupForm
+        v-if="isAssignmentGroupForm"
+        :assignment-group-form-machine="assignmentGroupFormMachine"
+      />
+    </v-dialog>
+
+    <v-btn
+      class="flat"
+      :block="false"
       @click="sendOpenAssignmentForm()"
     >
       Добавить задание
@@ -30,11 +50,13 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 import AssignmentForm from './AssignmentForm.vue'
+import AssignmentGroupForm from './AssignmentGroupForm.vue'
 import useCreationButtonsMachine from '@/compositions/useCreationButtonsMachine'
 
 @Component({
   components: {
     AssignmentForm,
+    AssignmentGroupForm,
   },
   setup (props: any) {
     return { ...useCreationButtonsMachine(props.creationButtonsMachine) }
