@@ -5,13 +5,17 @@ import CreateAssignmentMutation from './graphql/CreateAssignmentMutation'
 import CreateAssignmentInput from '@/models/CreateAssignmentInput'
 import AssignmentGroup from '@/models/AssignmentGroup'
 import ID from '@/models/ID'
-import GetAssignmentGroupQuery from './graphql/GetAssignmentGroupsQuery'
+import GetAssignmentGroupsQuery from './graphql/GetAssignmentGroupsQuery'
 import GetAssignmentQuery from './graphql/GetAssignmentQuery'
 import UpdateAssignmentMutation from './graphql/UpdateAssignmentMutation'
 import DeleteAssignmentMutation from './graphql/DeleteAssignmentMutation'
 import MarksConstraint from '@/models/MarksConstraint'
 import AssignmentSelections from '@/models/AssignmentSelections'
 import GetMarksConstraintsQuery from './graphql/GetMarksConstraintsQuery'
+import GetAssignmentGroupQuery from './graphql/GetAssignmentGroupQuery'
+import UpdateAssignmentGroupMutation from './graphql/UpdateAssignmentGroupMutation'
+import DeleteAssignmentGroupMutation from './graphql/DeleteAssignmentGroupMutation'
+import CreateAssignmentGroupMutation from './graphql/CreateAssignmentGroupMutation'
 
 export default class AssignmentService implements IAssignmentService {
   async getAssignment (id: ID): Promise<Assignment> {
@@ -60,6 +64,11 @@ export default class AssignmentService implements IAssignmentService {
       assignment.assignment_group = <any>assignmentGroupId
     }
 
+    if (typeof assignment.marks_constraint === 'object') {
+      const marksConstraintId = assignment.marks_constraint.id
+      assignment.marks_constraint = <any>marksConstraintId
+    }
+
     const result = await httpClient.mutate({
       mutation: UpdateAssignmentMutation,
       variables: { input: { where: { id }, data: assignment } },
@@ -81,10 +90,53 @@ export default class AssignmentService implements IAssignmentService {
     semesterDisciplineId: ID,
   ): Promise<AssignmentGroup[]> {
     const result = await httpClient.query({
-      query: GetAssignmentGroupQuery,
+      query: GetAssignmentGroupsQuery,
       variables: { semesterDisciplineId },
     })
 
     return result.data.data
+  }
+
+  async getAssignmentGroup (id: ID): Promise<AssignmentGroup> {
+    const result = await httpClient.query({
+      query: GetAssignmentGroupQuery,
+      variables: { id },
+    })
+
+    return result.data
+  }
+
+  async createAssignmentGroup (
+    assignmentGroup: AssignmentGroup,
+  ): Promise<AssignmentGroup> {
+    const result = await httpClient.mutate({
+      mutation: CreateAssignmentGroupMutation,
+      variables: { input: { data: assignmentGroup } },
+    })
+
+    return result.data
+  }
+
+  async updateAssignmentGroup (
+    assignmentGroup: AssignmentGroup,
+  ): Promise<AssignmentGroup> {
+    const id = assignmentGroup.id
+    delete assignmentGroup.id
+
+    const result = await httpClient.mutate({
+      mutation: UpdateAssignmentGroupMutation,
+      variables: { input: { where: { id }, data: assignmentGroup } },
+    })
+
+    return result.data
+  }
+
+  async deleteAssignmentGroup (id: ID): Promise<AssignmentGroup> {
+    const result = await httpClient.mutate({
+      mutation: DeleteAssignmentGroupMutation,
+      variables: { input: { where: { id } } },
+    })
+
+    return result.data
   }
 }
