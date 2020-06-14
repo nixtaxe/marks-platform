@@ -16,6 +16,7 @@
       :headers="headers"
       :items="studentMarks"
       :search="search"
+      :custom-filter="filterByName"
       :disable-pagination="true"
       :hide-default-footer="true"
       fixed-header
@@ -90,7 +91,7 @@
           >
             {{
               header.marks_constraint.maxValue === 100
-                ? item[header.value].value.toFixed(2)
+                ? (+item[header.value].value).toFixed(2)
                 : item[header.value].value
             }}
           </v-chip>

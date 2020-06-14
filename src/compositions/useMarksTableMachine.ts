@@ -101,6 +101,13 @@ export default function useMarksTableMachine (machine: any) {
     },
   )
 
+  const filterByName = (_value: any, search: string | null, item: any) => {
+    return (
+      search !== null &&
+      item.name.value.toLowerCase().indexOf(search.toLowerCase() || '') !== -1
+    )
+  }
+
   return {
     groupName,
     assignmentGroups,
@@ -118,5 +125,6 @@ export default function useMarksTableMachine (machine: any) {
     sendCloseAssignmentForm,
     getColor,
     checkKey,
+    filterByName,
   }
 }
