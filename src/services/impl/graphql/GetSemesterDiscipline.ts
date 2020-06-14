@@ -3,6 +3,13 @@ export default gql`
   query GetSemesterDiscipline($id: ID!) {
     data: semesterDiscipline(id: $id) {
       id
+      marks_constraint {
+        minValue
+        maxValue
+        satisfactory
+        good
+        excellent
+      }
       teacher_discipline_student_group {
         teacher {
           user {
@@ -30,6 +37,7 @@ export default gql`
       assignment_groups {
         id
         name
+        percentage
         assignments {
           id
           title

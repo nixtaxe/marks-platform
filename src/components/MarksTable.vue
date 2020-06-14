@@ -88,9 +88,16 @@
             :color="getColor(+item[header.value].value, header)"
             dark
           >
-            {{ item[header.value].value }}
+            {{
+              header.marks_constraint.maxValue === 100
+                ? item[header.value].value.toFixed(2)
+                : item[header.value].value
+            }}
           </v-chip>
-          <template v-slot:input>
+          <template
+            v-if="header.editable"
+            v-slot:input
+          >
             <tr>
               <td>{{ header.marks_constraint.minValue }} &lt;=</td>
               <v-spacer />
