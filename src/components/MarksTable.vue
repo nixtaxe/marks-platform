@@ -33,9 +33,22 @@
               :key="assignmentGroup.id"
               :colspan="assignmentGroup.width || 1"
               class="subtitle-2"
+              @click="sendOpenAssignmentGroupForm(assignmentGroup.id)"
             >
               {{ assignmentGroup.text }}
             </th>
+            <v-dialog
+              max-width="480px"
+              max-height="320px"
+              :value="isAssignmentGroupForm"
+              :persistent="isPersistentAssignmentGroupForm"
+              @input="sendCloseAssignmentGroupForm()"
+            >
+              <AssignmentGroupForm
+                v-if="isAssignmentGroupForm"
+                :assignment-group-form-machine="assignmentGroupFormMachine"
+              />
+            </v-dialog>
           </tr>
           <tr>
             <th
@@ -126,10 +139,12 @@ import Component from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 import useMarksTableMachine from '@/compositions/useMarksTableMachine'
 import AssignmentForm from '@/components/AssignmentForm.vue'
+import AssignmentGroupForm from '@/components/AssignmentGroupForm.vue'
 
 @Component({
   components: {
     AssignmentForm,
+    AssignmentGroupForm,
   },
   setup (props: any) {
     return { ...useMarksTableMachine(props.marksTableMachine) }

@@ -105,7 +105,7 @@ export default class AssignmentService implements IAssignmentService {
       fetchPolicy: 'no-cache',
     })
 
-    return result.data
+    return result.data.data
   }
 
   async createAssignmentGroup (
@@ -116,7 +116,7 @@ export default class AssignmentService implements IAssignmentService {
       variables: { input: { data: assignmentGroup } },
     })
 
-    return result.data
+    return result.data.data
   }
 
   async updateAssignmentGroup (
@@ -130,7 +130,7 @@ export default class AssignmentService implements IAssignmentService {
       variables: { input: { where: { id }, data: assignmentGroup } },
     })
 
-    return result.data
+    return result.data.data
   }
 
   async deleteAssignmentGroup (id: ID): Promise<AssignmentGroup> {
@@ -139,6 +139,6 @@ export default class AssignmentService implements IAssignmentService {
       variables: { input: { where: { id } } },
     })
 
-    return result.data
+    return result.data.data
   }
 }

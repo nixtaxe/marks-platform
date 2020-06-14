@@ -11,6 +11,9 @@ import assignmentFormMachine, {
   assignmentContext,
 } from './AssignmentFormMachine'
 import { FormMode } from './FormMachine'
+import assignmentGroupFormMachine, {
+  assignmentGroupContext,
+} from './AssignmentGroupFormMachine'
 
 interface MarksTableContext {
   semesterDisciplineId: ID
@@ -30,7 +33,9 @@ type MarksTableEvent =
   | { type: 'UPDATE_MARK'; mark: Mark }
   | { type: 'DELETE_MARK'; id: ID }
   | { type: 'OPEN_ASSIGNMENT_FORM'; id: ID }
+  | { type: 'OPEN_ASSIGNMENT_GROUP_FORM'; id: ID }
   | { type: 'CLOSE_ASSIGNMENT_FORM' }
+  | { type: 'CLOSE_ASSIGNMENT_GROUP_FORM' }
 
 class MarksTableMachine {
   @inject() marksService!: IMarksService
@@ -109,6 +114,20 @@ class MarksTableMachine {
                   },
                 },
               },
+              assignmentGroupForm: {
+                invoke: {
+                  id: 'assignmentGroupFormMachine',
+                  src: assignmentGroupFormMachine,
+                  data: (context: MarksTableContext, event: any) => {
+                    const newContext = assignmentGroupContext
+                    newContext.values.semesterDisciplineId =
+                      context.semesterDisciplineId
+                    newContext.mode = FormMode.Showing
+                    newContext.values.assignmentGroup.id = event.id
+                    return newContext
+                  },
+                },
+              },
             },
             on: {
               REFRESH: '#marksTable.loading.refreshing',
@@ -120,7 +139,9 @@ class MarksTableMachine {
               UPDATE_MARK: '#marksTable.loading.updatingMark',
               DELETE_MARK: '#marksTable.loading.deletingMark',
               OPEN_ASSIGNMENT_FORM: '.assignmentForm',
+              OPEN_ASSIGNMENT_GROUP_FORM: '.assignmentGroupForm',
               CLOSE_ASSIGNMENT_FORM: '.idle',
+              CLOSE_ASSIGNMENT_GROUP_FORM: '.idle',
             },
           },
           error: {

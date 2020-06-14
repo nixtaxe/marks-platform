@@ -13,6 +13,9 @@ export default function useMarksTableMachine (machine: any) {
   const assignmentFormMachine = computed(
     () => machine.state.children.assignmentFormMachine,
   )
+  const assignmentGroupFormMachine = computed(
+    () => machine.state.children.assignmentGroupFormMachine,
+  )
 
   const isLoading = computed(() => machine.state.matches('loading'))
   const isLoaded = computed(() => machine.state.matches('loaded'))
@@ -20,9 +23,17 @@ export default function useMarksTableMachine (machine: any) {
   const isAssignmentForm = computed(() =>
     machine.state.matches('loaded.assignmentForm'),
   )
+  const isAssignmentGroupForm = computed(() =>
+    machine.state.matches('loaded.assignmentGroupForm'),
+  )
   const isPersistentAssignmentForm = computed(() => {
     if (assignmentFormMachine.value !== undefined)
       return assignmentFormMachine.value.state.matches('submitting')
+    else return false
+  })
+  const isPersistentAssignmentGroupForm = computed(() => {
+    if (assignmentGroupFormMachine.value !== undefined)
+      return assignmentGroupFormMachine.value.state.matches('submitting')
     else return false
   })
   const send = machine.send
@@ -32,7 +43,10 @@ export default function useMarksTableMachine (machine: any) {
   const sendDeleteMark = (id: ID) => send('DELETE_MARK', { id })
   const sendOpenAssignmentForm = (id: ID) =>
     send('OPEN_ASSIGNMENT_FORM', { id })
+  const sendOpenAssignmentGroupForm = (id: ID) =>
+    send('OPEN_ASSIGNMENT_GROUP_FORM', { id })
   const sendCloseAssignmentForm = () => send('CLOSE_ASSIGNMENT_FORM')
+  const sendCloseAssignmentGroupForm = () => send('CLOSE_ASSIGNMENT_GROUP_FORM')
   const getColor = (mark: number, header: any) => {
     const { satisfactory, good, excellent } = header.marks_constraint
     if (mark >= excellent) return 'teal'
@@ -84,15 +98,20 @@ export default function useMarksTableMachine (machine: any) {
     headers,
     studentMarks,
     assignmentFormMachine,
+    assignmentGroupFormMachine,
     isLoading,
     isLoaded,
     isFailure,
     isAssignmentForm,
+    isAssignmentGroupForm,
     isPersistentAssignmentForm,
+    isPersistentAssignmentGroupForm,
     sendRefresh,
     performMutation,
     sendOpenAssignmentForm,
+    sendOpenAssignmentGroupForm,
     sendCloseAssignmentForm,
+    sendCloseAssignmentGroupForm,
     getColor,
     checkKey,
     filterByName,
