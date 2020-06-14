@@ -2,6 +2,7 @@ import SemesterDiscipline from '@/models/SemesterDiscipline'
 import TableHeader from '@/models/TableHeader'
 import TableItem from '@/models/TableItem'
 import Mark from '@/models/Mark'
+import calculateSemesterMarks from './calculateSemesterMarks'
 
 export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
   const groupName =
@@ -77,6 +78,8 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
       items[itemId][assignment.id] = markData
     })
   })
+
+  items = calculateSemesterMarks(items, assignmentGroups)
 
   return { groupName, assignmentGroups, headers, items }
 }

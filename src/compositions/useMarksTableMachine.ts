@@ -1,9 +1,7 @@
-import { computed, watch } from '@vue/composition-api'
+import { computed } from '@vue/composition-api'
 import ID from '@/models/ID'
 import Mark from '@/models/Mark'
 import MarksConstraint from '@/models/MarksConstraint'
-import Assignment from '@/models/Assignment'
-import AssignmentGroup from '@/models/AssignmentGroup'
 
 export default function useMarksTableMachine (machine: any) {
   const groupName = computed(() => machine.state.context.groupName)
@@ -72,34 +70,6 @@ export default function useMarksTableMachine (machine: any) {
       $event.preventDefault()
     }
   }
-
-  watch(
-    () => machine.state.context.studentMarks,
-    (marks) => {
-      if (marks === undefined) return
-
-      marks.forEach((marksRow: any) => {
-        let studentSemesterMark = 0.0
-
-        machine.state.context.assignmentGroups.forEach(
-          (ag: AssignmentGroup) => {
-            ag.assignments.forEach((assignment: Assignment) => {
-              const mark = marksRow[assignment.id]
-              let markValue = assignment.marks_constraint.minValue
-              if ('value' in mark && mark.value !== '')
-                markValue = parseFloat(mark.value)
-              studentSemesterMark +=
-                ((markValue / assignment.marks_constraint.maxValue) *
-                  ag.percentage) /
-                ag.assignments.length
-            })
-          },
-        )
-
-        marksRow.semester_mark.value = studentSemesterMark
-      })
-    },
-  )
 
   const filterByName = (_value: any, search: string | null, item: any) => {
     return (
