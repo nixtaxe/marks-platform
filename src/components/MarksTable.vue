@@ -31,7 +31,7 @@
             <th
               v-for="assignmentGroup in assignmentGroups"
               :key="assignmentGroup.id"
-              :colspan="assignmentGroup.width"
+              :colspan="assignmentGroup.width || 1"
               class="subtitle-2"
             >
               {{ assignmentGroup.text }}

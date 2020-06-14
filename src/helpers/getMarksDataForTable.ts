@@ -3,6 +3,7 @@ import TableHeader from '@/models/TableHeader'
 import TableItem from '@/models/TableItem'
 import Mark from '@/models/Mark'
 import calculateSemesterMarks from './calculateSemesterMarks'
+import AssignmentGroup from '@/models/AssignmentGroup'
 
 export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
   const groupName =
@@ -40,6 +41,20 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
         }
       }),
     )
+    .concat(
+      assignmentGroups
+        .filter((x) => x.assignments.length === 0)
+        .map((ag) => {
+          return {
+            text: '',
+            value: `${ag.id}-${ag.name}`,
+            editable: false,
+            sortable: false,
+            width: '32px',
+            fixed: false,
+          }
+        }),
+    )
     .concat({
       text: 'Итоговая оценка',
       value: 'semester_mark',
@@ -62,6 +77,12 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
     studentAssignments.forEach((x) => {
       // @ts-ignore
       items[items.length - 1][x.id] = {}
+    })
+    assignmentGroups.forEach((ag: AssignmentGroup) => {
+      if (ag.assignments.length === 0) {
+        // @ts-ignore
+        items[items.length - 1][`${ag.id}-${ag.name}`] = { value: '' }
+      }
     })
   })
 
