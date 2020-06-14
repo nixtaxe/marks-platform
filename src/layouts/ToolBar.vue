@@ -7,11 +7,10 @@
       v-model="selectSemesterDiscipline"
       :loading="loading"
       :items="items"
-      :search-input.sync="searchSemesterDiscipline"
+      :filter="filterSemesterDisciplines"
       :clearable="true"
       solo-inverted
       flat
-      hide-no-data
       hide-details
       cache-items
       clear-icon="mdi-clear"

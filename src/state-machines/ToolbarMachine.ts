@@ -71,13 +71,17 @@ class ToolbarMachine {
             }),
           ),
           searchSemesterDiscipline: assign((context, event: any) => {
+            const pieces = event.searchValue.split(' ')
             const filteredSemesterDisciplines = context.semesterDisciplines.filter(
               ({ text }: { text: string }) => {
-                return (
-                  (text || '')
-                    .toLowerCase()
-                    .indexOf((event.searchValue || '').toLowerCase()) > -1
+                const lowerCaseText = (text || '').toLowerCase()
+                const result = pieces.reduce(
+                  (acc: boolean, current: string) =>
+                    lowerCaseText.indexOf((current || '').toLowerCase()) > -1 &&
+                    acc,
+                  true,
                 )
+                return result
               },
             )
             return {
