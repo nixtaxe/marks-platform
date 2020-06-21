@@ -6,6 +6,11 @@ export default gql`
       id
       name
       percentage
+      semester_discipline {
+        assignment_groups {
+          percentage
+        }
+      }
     }
   }
 `

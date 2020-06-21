@@ -60,7 +60,9 @@ const creationButtonsMachine = Machine<
           id: 'assignmentGroupFormMachine',
           src: assignmentGroupFormMachine,
           data: (context: CreationButtonsContext, _event: any) => {
-            const newContext = assignmentGroupContext
+            const newContext = assignmentGroupContext()
+            newContext.values.semesterDisciplineId =
+              context.semesterDisciplineId
             newContext.values.assignmentGroup.semester_discipline = <any>(
               context.semesterDisciplineId
             )

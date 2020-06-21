@@ -119,7 +119,7 @@ class MarksTableMachine {
                   id: 'assignmentGroupFormMachine',
                   src: assignmentGroupFormMachine,
                   data: (context: MarksTableContext, event: any) => {
-                    const newContext = assignmentGroupContext
+                    const newContext = assignmentGroupContext()
                     newContext.values.semesterDisciplineId =
                       context.semesterDisciplineId
                     newContext.mode = FormMode.Showing

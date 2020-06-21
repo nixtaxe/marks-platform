@@ -7,9 +7,11 @@ import ID from '@/models/ID'
 
 interface AssignmentGroupFormRules {
   nameRules: Function[]
+  percentageRules: Function[]
 }
 
 interface AssignmentGroupFormValues {
+  remainingPercentages: number
   assignmentGroup: AssignmentGroup
   semesterDisciplineId: ID
   assignmentGroupResponse?: AssignmentGroup
@@ -23,17 +25,22 @@ interface AssignmentGroupFormContext {
   success: string
 }
 
-export const assignmentGroupContext = <AssignmentGroupFormContext>{
-  mode: FormMode.Creating,
-  values: <AssignmentGroupFormValues>{
-    assignmentGroup: <any>{ semester_discipline: '1' },
-  },
-  rules: {
-    nameRules: [(v: string) => !!v || 'Введите название группы заданий'],
-  },
-  error: '',
-  success: 'Группа заданий создана',
-}
+export const assignmentGroupContext = () =>
+  <AssignmentGroupFormContext>{
+    mode: FormMode.Creating,
+    values: <AssignmentGroupFormValues>{
+      remainingPercentages: 100,
+      assignmentGroup: <any>{ semester_discipline: '1' },
+    },
+    rules: {
+      nameRules: [(v: string) => !!v || 'Введите название группы заданий'],
+      percentageRules: [
+        (v: string) => v !== '' || 'Введите вес группы в процентах',
+      ],
+    },
+    error: '',
+    success: 'Группа заданий создана',
+  }
 
 type AssignmentGroupFormEvent = { type: 'CREATE_ASSIGNMENT_GROUP' }
 
@@ -63,7 +70,10 @@ class AssignmentGroupFormMachine {
             return this.assignmentService.getAssignmentGroup(
               context.values.assignmentGroup.id,
             )
-          else return Promise.resolve()
+          else
+            return this.assignmentService.getSemesterDisciplinePercentages(
+              context.values.semesterDisciplineId,
+            )
         },
       },
       actions: {
@@ -78,14 +88,28 @@ class AssignmentGroupFormMachine {
         }),
         onPreloadDone: assign({
           values: (context, event: any) => {
+            let semesterDiscipline
             if (context.mode === FormMode.Showing)
+              semesterDiscipline = event.data.semester_discipline
+            else semesterDiscipline = event.data
+
+            const remainingPercentages = semesterDiscipline.assignment_groups.reduce(
+              (acc: number, current: AssignmentGroup) =>
+                acc - current.percentage,
+              100,
+            )
+
+            if (context.mode === FormMode.Showing) {
+              delete event.data.semester_discipline
               return {
                 ...context.values,
                 assignmentGroup: event.data,
+                remainingPercentages,
               }
-            else
+            } else
               return {
                 ...context.values,
+                remainingPercentages,
               }
           },
         }),
@@ -103,6 +127,8 @@ class AssignmentGroupFormMachine {
 }
 
 const getAssignmentGroupFormMachine = () =>
-  new AssignmentGroupFormMachine().create().withContext(assignmentGroupContext)
+  new AssignmentGroupFormMachine()
+    .create()
+    .withContext(assignmentGroupContext())
 
 export default getAssignmentGroupFormMachine

@@ -36,7 +36,14 @@
           v-model="percentage"
           name="percentage"
           label="Вес оценки в процентах"
-          :disabled="true"
+          required
+          :hint="percentageHint"
+          :persistent-hint="true"
+          :rules="percentageRules"
+          :disabled="!isEditing"
+          @keypress="checkKey($event)"
+          @change="sendChange({ key: 'percentage', value: +percentage })"
+        />
         />
         <v-card-actions>
           <v-spacer />

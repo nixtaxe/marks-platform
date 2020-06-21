@@ -16,8 +16,20 @@ import GetAssignmentGroupQuery from './graphql/GetAssignmentGroupQuery'
 import UpdateAssignmentGroupMutation from './graphql/UpdateAssignmentGroupMutation'
 import DeleteAssignmentGroupMutation from './graphql/DeleteAssignmentGroupMutation'
 import CreateAssignmentGroupMutation from './graphql/CreateAssignmentGroupMutation'
+import GetSemesterDisciplinePercentagesQuery from './graphql/GetSemesterDisciplinePercentagesQuery'
+import SemesterDiscipline from '@/models/SemesterDiscipline'
 
 export default class AssignmentService implements IAssignmentService {
+  async getSemesterDisciplinePercentages (id: ID): Promise<SemesterDiscipline> {
+    const result = await httpClient.query({
+      query: GetSemesterDisciplinePercentagesQuery,
+      variables: { id },
+      fetchPolicy: 'no-cache',
+    })
+
+    return result.data.data
+  }
+
   async getAssignment (id: ID): Promise<Assignment> {
     const result = await httpClient.query({
       query: GetAssignmentQuery,
