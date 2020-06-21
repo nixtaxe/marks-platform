@@ -1,19 +1,25 @@
-import { assign, send } from 'xstate'
+import { assign, send, sendParent } from 'xstate'
 import formMachine, { FormMode } from './FormMachine'
 import { inject } from 'inversify-props'
 import IAssignmentService from '@/services/IAssignmentService'
 import AssignmentGroup from '@/models/AssignmentGroup'
 import ID from '@/models/ID'
+import IntegrationType from '@/models/IntegrationType'
+import MarksConstraint from '@/models/MarksConstraint'
 
 interface AssignmentGroupFormRules {
   nameRules: Function[]
   percentageRules: Function[]
+  integrationTypeRules: Function[]
+  marksConstraintRules: Function[]
 }
 
 interface AssignmentGroupFormValues {
   remainingPercentages: number
   assignmentGroup: AssignmentGroup
   semesterDisciplineId: ID
+  integrationTypes: IntegrationType[]
+  marksConstraints: MarksConstraint[]
   assignmentGroupResponse?: AssignmentGroup
 }
 
@@ -28,21 +34,29 @@ interface AssignmentGroupFormContext {
 export const assignmentGroupContext = () =>
   <AssignmentGroupFormContext>{
     mode: FormMode.Creating,
-    values: <AssignmentGroupFormValues>{
+    values: <any>{
       remainingPercentages: 100,
       assignmentGroup: <any>{ semester_discipline: '1' },
+      integrationTypes: [],
+      marksConstraints: [],
     },
     rules: {
       nameRules: [(v: string) => !!v || 'Введите название группы заданий'],
       percentageRules: [
         (v: string) => v !== '' || 'Введите вес группы в процентах',
       ],
+      integrationTypeRules: [(v: string) => !!v || 'Выберите тип интеграции'],
+      marksConstraintRules: [
+        (v: string) => !!v || 'Выберите тип оценки по умолчанию',
+      ],
     },
     error: '',
     success: 'Группа заданий создана',
   }
 
-type AssignmentGroupFormEvent = { type: 'CREATE_ASSIGNMENT_GROUP' }
+type AssignmentGroupFormEvent =
+  | { type: 'CREATE_ASSIGNMENT_GROUP' }
+  | { type: 'REFRESH' }
 
 class AssignmentGroupFormMachine {
   @inject() assignmentService!: IAssignmentService
@@ -71,9 +85,15 @@ class AssignmentGroupFormMachine {
               context.values.assignmentGroup.id,
             )
           else
-            return this.assignmentService.getSemesterDisciplinePercentages(
+            return this.assignmentService.getAssignmentGroupSelections(
               context.values.semesterDisciplineId,
             )
+        },
+        onRefresh: (context: AssignmentGroupFormContext, _event: any) => {
+          assign({ error: () => '' })
+          return this.assignmentService.refreshImport(
+            context.values.assignmentGroup.id,
+          )
         },
       },
       actions: {
@@ -88,12 +108,13 @@ class AssignmentGroupFormMachine {
         }),
         onPreloadDone: assign({
           values: (context, event: any) => {
-            let semesterDiscipline
+            let assignmentGroups
             if (context.mode === FormMode.Showing)
-              semesterDiscipline = event.data.semester_discipline
-            else semesterDiscipline = event.data
+              assignmentGroups =
+                event.data.semester_discipline.assignment_groups
+            else assignmentGroups = event.data.assignment_groups
 
-            const remainingPercentages = semesterDiscipline.assignment_groups.reduce(
+            const remainingPercentages = assignmentGroups.reduce(
               (acc: number, current: AssignmentGroup) =>
                 acc - current.percentage,
               100,
@@ -103,16 +124,20 @@ class AssignmentGroupFormMachine {
               delete event.data.semester_discipline
               return {
                 ...context.values,
+                integrationTypes: [event.data.integration_type],
+                marksConstraints: [event.data.default_marks_constraint],
                 assignmentGroup: event.data,
                 remainingPercentages,
               }
             } else
               return {
                 ...context.values,
+                ...event.data,
                 remainingPercentages,
               }
           },
         }),
+        onRefreshDone: sendParent('REFRESH'),
         onDone: assign({
           values: (context, event: any) => ({
             ...context.values,

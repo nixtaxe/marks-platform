@@ -21,6 +21,7 @@ type FormEvents =
   | { type: 'CLOSE_FORM' }
   | { type: 'EDIT' }
   | { type: 'DELETE' }
+  | { type: 'REFRESH' }
 
 const formMachine = Machine<FormMachineContext, FormEvents>(
   {
@@ -39,8 +40,17 @@ const formMachine = Machine<FormMachineContext, FormEvents>(
           },
         },
       },
-      preloadingError: {
-        entry: 'onPreloadingError',
+      refreshing: {
+        invoke: {
+          src: 'onRefresh',
+          onDone: {
+            actions: 'onRefreshDone',
+            target: 'unknown',
+          },
+          onError: {
+            target: 'editing.error',
+          },
+        },
       },
       unknown: {
         on: {
@@ -60,6 +70,7 @@ const formMachine = Machine<FormMachineContext, FormEvents>(
         on: {
           EDIT: { target: 'preloading', actions: 'onEditing' },
           DELETE: 'submitting',
+          REFRESH: 'refreshing',
           CLOSE_FORM: 'closed',
         },
       },

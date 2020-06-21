@@ -18,6 +18,10 @@ import DeleteAssignmentGroupMutation from './graphql/DeleteAssignmentGroupMutati
 import CreateAssignmentGroupMutation from './graphql/CreateAssignmentGroupMutation'
 import GetSemesterDisciplinePercentagesQuery from './graphql/GetSemesterDisciplinePercentagesQuery'
 import SemesterDiscipline from '@/models/SemesterDiscipline'
+import AssignmentGroupSelections from '@/models/AssignmentGroupSelections'
+import IntegrationType from '@/models/IntegrationType'
+import GetIntegrationTypesQuery from './graphql/GetIntegrationTypesQuery'
+import { assignmentGroupsPath } from '../ConstStrings'
 
 export default class AssignmentService implements IAssignmentService {
   async getSemesterDisciplinePercentages (id: ID): Promise<SemesterDiscipline> {
@@ -120,6 +124,30 @@ export default class AssignmentService implements IAssignmentService {
     return result.data.data
   }
 
+  async getAssignmentGroupSelections (
+    semesterDisciplineId: ID,
+  ): Promise<AssignmentGroupSelections> {
+    const semesterDiscipline = await this.getSemesterDisciplinePercentages(
+      semesterDisciplineId,
+    )
+    const integrationTypes = await this.getIntegrationTypes()
+    const marksConstraints = await this.getMarksConstraints()
+    return {
+      assignment_groups: semesterDiscipline.assignment_groups,
+      integrationTypes,
+      marksConstraints,
+    }
+  }
+
+  async getIntegrationTypes (): Promise<IntegrationType[]> {
+    const result = await httpClient.query({
+      query: GetIntegrationTypesQuery,
+      fetchPolicy: 'no-cache',
+    })
+
+    return result.data.data
+  }
+
   async createAssignmentGroup (
     assignmentGroup: AssignmentGroup,
   ): Promise<AssignmentGroup> {
@@ -137,6 +165,17 @@ export default class AssignmentService implements IAssignmentService {
     const id = assignmentGroup.id
     delete assignmentGroup.id
 
+    if (typeof assignmentGroup.integration_type === 'object') {
+      const integrationTypeId = assignmentGroup.integration_type.id
+      assignmentGroup.integration_type = <any>integrationTypeId
+    }
+
+    if (typeof assignmentGroup.default_marks_constraint === 'object') {
+      const defaultMarksConstraintId =
+        assignmentGroup.default_marks_constraint.id
+      assignmentGroup.default_marks_constraint = <any>defaultMarksConstraintId
+    }
+
     const result = await httpClient.mutate({
       mutation: UpdateAssignmentGroupMutation,
       variables: { input: { where: { id }, data: assignmentGroup } },
@@ -152,5 +191,12 @@ export default class AssignmentService implements IAssignmentService {
     })
 
     return result.data.data
+  }
+
+  async refreshImport (assignmentGroupId: ID): Promise<any> {
+    const result = await fetch(
+      `${assignmentGroupsPath}refresh/${assignmentGroupId}`,
+    )
+    return result
   }
 }

@@ -8,10 +8,10 @@ export default function useAssignmentFormMachine (machine: any) {
   const marksConstraints = computed(
     () => machine.state.context.values.marksConstraints,
   )
-  var title = ref('')
-  var deadlineDate = ref('')
-  var selectedAssignmentGroup = ref(null)
-  var selectedMarksConstraint = ref(null)
+  const title = ref('')
+  const deadlineDate = ref('')
+  const selectedAssignmentGroup = ref(null)
+  const selectedMarksConstraint = ref(null)
 
   const formData = useFormMachine(machine)
   const onPickDeadlineDate = (save: Function, deadlineDate: string) => {

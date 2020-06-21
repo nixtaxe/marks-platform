@@ -5,6 +5,7 @@ import { inject } from 'inversify-props'
 import IAssignmentService from '@/services/IAssignmentService'
 import AssignmentGroup from '@/models/AssignmentGroup'
 import ID from '@/models/ID'
+import MarksConstraint from '@/models/MarksConstraint'
 
 interface AssignmentFormRules {
   titleRules: Function[]
@@ -14,6 +15,7 @@ interface AssignmentFormRules {
 interface AssignmentFormValues {
   assignment: Assignment
   assignmentGroups: AssignmentGroup[]
+  marksConstraints: MarksConstraint[]
   semesterDisciplineId: ID
   assignmentResponse?: Assignment
 }

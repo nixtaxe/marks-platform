@@ -10,6 +10,7 @@ export default function useFormMachine (machine: any) {
   const isShowing = computed(() => machine.state.matches('showing'))
   const isEditing = computed(() => machine.state.matches('editing'))
   const isSubmitting = computed(() => machine.state.matches('submitting'))
+  const isRefreshing = computed(() => machine.state.matches('refreshing'))
   const isSuccess = computed(() => machine.state.matches('success'))
   const wasPreloaded = computed(() => !machine.state.matches('preloading'))
 
@@ -36,6 +37,7 @@ export default function useFormMachine (machine: any) {
     isShowing,
     isEditing,
     isSubmitting,
+    isRefreshing,
     isSuccess,
     wasPreloaded,
     send,

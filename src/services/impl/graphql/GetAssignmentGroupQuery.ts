@@ -6,6 +6,19 @@ export default gql`
       id
       name
       percentage
+      integration_type {
+        id
+        name
+        code
+      }
+      integrationUrl
+      sheetName
+      upperLeftCell
+      lowerRightCell
+      default_marks_constraint {
+        id
+        name
+      }
       semester_discipline {
         assignment_groups {
           percentage
