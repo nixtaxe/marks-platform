@@ -5,10 +5,9 @@
     </v-card-title>
     <v-card-subtitle>
       {{ groupName || 'Группа' }}
+      {{ startDate || 'Дата начала предмета' }}
       <v-spacer />
       {{ teacherFullName || 'Преподаватель' }}
-      <v-spacer />
-      {{ startDate || 'Дата начала предмета' }}
       <v-spacer />
       <v-text-field
         v-model="search"

@@ -5,7 +5,7 @@ import Mark from '@/models/Mark'
 import calculateSemesterMarks from './calculateSemesterMarks'
 import AssignmentGroup from '@/models/AssignmentGroup'
 import Student from '@/models/Student'
-import getMonthAndYear from './getMonthAndYear'
+import getSemesterTimeAndYear from './getSemesterTimeAndYear'
 
 export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
   const groupName =
@@ -14,7 +14,7 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
     groupMarks.teacher_discipline_student_group.academic_discipline.name
   const teacherUser = groupMarks.teacher_discipline_student_group.teacher.user
   const teacherFullName = `${teacherUser.familyName} ${teacherUser.name} ${teacherUser.patronymic}`
-  let startDate = getMonthAndYear(groupMarks.semesterDates.startDate)
+  let startDate = getSemesterTimeAndYear(groupMarks.semesterDates.startDate)
   const studentGroup = groupMarks.teacher_discipline_student_group.student_group
   const studentAssignments = groupMarks.assignment_groups.flatMap(
     (ag) => ag.assignments,
