@@ -45,7 +45,7 @@
       </v-icon>
     </v-btn>
     <v-btn
-      v-if="canRefreshImport"
+      v-if="isShowing && canRefreshImport"
       color="primary"
       fab
       text
