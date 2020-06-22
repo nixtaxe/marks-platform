@@ -17,6 +17,10 @@ const routes: Array<RouteConfig> = [
     path: '/marks',
     component: loadView('MarksPage'),
   },
+  {
+    path: '*',
+    component: loadView('PageNotFound'),
+  },
 ]
 
 const router = new VueRouter({
