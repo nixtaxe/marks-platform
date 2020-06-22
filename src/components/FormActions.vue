@@ -18,20 +18,6 @@
     </v-btn>
     <v-btn
       v-if="isShowing"
-      color="primary"
-      fab
-      text
-      @click="sendEdit()"
-    >
-      <v-icon
-        large
-        dark
-      >
-        {{ editIcon }}
-      </v-icon>
-    </v-btn>
-    <v-btn
-      v-if="isShowing"
       color="grey"
       fab
       text
@@ -42,6 +28,20 @@
         dark
       >
         {{ deleteIcon }}
+      </v-icon>
+    </v-btn>
+    <v-btn
+      v-if="isShowing"
+      color="primary"
+      fab
+      text
+      @click="sendEdit()"
+    >
+      <v-icon
+        large
+        dark
+      >
+        {{ editIcon }}
       </v-icon>
     </v-btn>
     <v-btn
