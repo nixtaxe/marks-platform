@@ -7,6 +7,7 @@ export default function useMarksTableMachine (machine: any) {
   const groupName = computed(() => machine.state.context.groupName)
   const disciplineName = computed(() => machine.state.context.disciplineName)
   const teacherFullName = computed(() => machine.state.context.teacherFullName)
+  const startDate = computed(() => machine.state.context.startDate)
   const assignmentGroups = computed(
     () => machine.state.context.assignmentGroups,
   )
@@ -100,6 +101,7 @@ export default function useMarksTableMachine (machine: any) {
     groupName,
     disciplineName,
     teacherFullName,
+    startDate,
     assignmentGroups,
     headers,
     studentMarks,

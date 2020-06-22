@@ -10,6 +10,9 @@ export default gql`
         good
         excellent
       }
+      semesterDates {
+        startDate
+      }
       teacher_discipline_student_group {
         teacher {
           user {

@@ -8,6 +8,8 @@
       <v-spacer />
       {{ teacherFullName || 'Преподаватель' }}
       <v-spacer />
+      {{ startDate || 'Дата начала предмета' }}
+      <v-spacer />
       <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
