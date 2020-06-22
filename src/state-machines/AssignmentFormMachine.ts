@@ -29,23 +29,26 @@ interface AssignmentFormContext {
   success: string
 }
 
-export const assignmentContext = <AssignmentFormContext>{
-  mode: FormMode.Creating,
-  values: <AssignmentFormValues>{
-    assignment: <any>{},
-    assignmentGroups: [],
-    marksConstraints: [],
-    semesterDisciplineId: '1',
-  },
-  canEdit: false,
-  rules: {
-    titleRules: [(v: string) => !!v || 'Введите название задания'],
-    assignmentGroupRules: [(v: string) => !!v || 'Выберите группу для задания'],
-    marksConstraintRules: [(v: string) => !!v || 'Выберите тип оценки'],
-  },
-  error: '',
-  success: 'Задание создано',
-}
+export const assignmentContext = () =>
+  <AssignmentFormContext>{
+    mode: FormMode.Creating,
+    values: <AssignmentFormValues>{
+      assignment: <any>{},
+      assignmentGroups: [],
+      marksConstraints: [],
+      semesterDisciplineId: '1',
+    },
+    canEdit: false,
+    rules: {
+      titleRules: [(v: string) => !!v || 'Введите название задания'],
+      assignmentGroupRules: [
+        (v: string) => !!v || 'Выберите группу для задания',
+      ],
+      marksConstraintRules: [(v: string) => !!v || 'Выберите тип оценки'],
+    },
+    error: '',
+    success: 'Задание создано',
+  }
 
 type AssignmentFormEvent = { type: 'CREATE_ASSIGNMENT' }
 
@@ -122,6 +125,6 @@ class AssignmentFormMachine {
 }
 
 const getAssignmentFormMachine = () =>
-  new AssignmentFormMachine().create().withContext(assignmentContext)
+  new AssignmentFormMachine().create().withContext(assignmentContext())
 
 export default getAssignmentFormMachine
