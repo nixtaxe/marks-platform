@@ -4,6 +4,7 @@ import TableItem from '@/models/TableItem'
 import Mark from '@/models/Mark'
 import calculateSemesterMarks from './calculateSemesterMarks'
 import AssignmentGroup from '@/models/AssignmentGroup'
+import Student from '@/models/Student'
 
 export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
   const groupName =
@@ -70,6 +71,17 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
     })
 
   let items: TableItem[] = []
+  const sortFullNames = (a: Student, b: Student) => {
+    if (a.user.familyName > b.user.familyName) return 1
+    else if (a.user.familyName === b.user.familyName)
+      if (a.user.name > b.user.name) return 1
+      else if (a.user.name === b.user.name)
+        if (a.user.patronymic > b.user.patronymic) return 1
+        else return -1
+      else return -1
+    else return -1
+  }
+  studentGroup.students = studentGroup.students.sort(sortFullNames)
   studentGroup.students.forEach((x) => {
     items.push({
       id: x.id,
