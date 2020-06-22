@@ -16,9 +16,6 @@
         hide-details
       />
     </v-card-subtitle>
-    <!-- <v-card-text>
-
-    </v-card-text> -->
     <v-data-table
       :loading="isLoading"
       :headers="headers"
@@ -117,7 +114,7 @@
             }}
           </v-chip>
           <template
-            v-if="header.editable"
+            v-if="header.editable && canEdit"
             v-slot:input
           >
             <tr>

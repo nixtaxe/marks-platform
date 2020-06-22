@@ -38,6 +38,8 @@ export default function useMarksTableMachine (machine: any) {
       return assignmentGroupFormMachine.value.state.matches('submitting')
     else return false
   })
+  const canEdit = computed(() => machine.state.context.canEdit)
+
   const send = machine.send
   const sendRefresh = () => send('REFRESH')
   const sendCreateMark = (mark: Mark) => send('CREATE_MARK', { mark })
@@ -110,6 +112,7 @@ export default function useMarksTableMachine (machine: any) {
     isAssignmentGroupForm,
     isPersistentAssignmentForm,
     isPersistentAssignmentGroupForm,
+    canEdit,
     sendRefresh,
     performMutation,
     sendOpenAssignmentForm,
