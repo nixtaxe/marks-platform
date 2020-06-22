@@ -131,53 +131,17 @@
           </div>
         </div>
 
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            v-if="isEditing"
-            x-large
-            min-width="150px"
-            color="primary"
-            type="submit"
-            :loading="isSubmitting"
-          >
-            Сохранить
-          </v-btn>
-          <v-btn
-            v-if="isShowing"
-            x-large
-            min-width="150px"
-            color="primary"
-            @click="sendEdit()"
-          >
-            Редактировать
-          </v-btn>
-          <v-btn
-            v-if="isShowing"
-            x-large
-            min-width="150px"
-            color="primary"
-            @click="sendDelete()"
-          >
-            Удалить
-          </v-btn>
-          <v-btn
-            v-if="canRefreshImport"
-            color="primary"
-            fab
-            text
-            @click="sendRefreshImport()"
-          >
-            <v-icon
-              dark
-              large
-              :loading="isRefreshing"
-            >
-              {{ refreshImportIcon }}
-            </v-icon>
-          </v-btn>
-          <v-spacer />
-        </v-card-actions>
+        <FormActions
+          v-if="canEdit"
+          :is-editing="isEditing"
+          :is-showing="isShowing"
+          :is-submitting="isSubmitting"
+          :can-refresh-import="canRefreshImport"
+          :is-refreshing="isRefreshing"
+          :send-edit="sendEdit"
+          :send-delete="sendDelete"
+          :send-refresh-import="sendRefreshImport"
+        />
       </v-form>
     </v-card-text>
   </v-card>
@@ -187,11 +151,15 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
-import { mdiCloudRefresh } from '@mdi/js'
+import FormActions from './FormActions.vue'
+// import { mdiCloudRefresh } from '@mdi/js'
 
 import useAssignmentGroupFormMachine from '@/compositions/useAssignmentGroupFormMachine'
 
 @Component({
+  components: {
+    FormActions,
+  },
   setup (props: any) {
     return {
       ...useAssignmentGroupFormMachine(props.assignmentGroupFormMachine),
@@ -200,6 +168,6 @@ import useAssignmentGroupFormMachine from '@/compositions/useAssignmentGroupForm
 })
 export default class AssignmentGroupForm extends Vue {
   @Prop() assignmentGroupFormMachine: any
-  refreshImportIcon = mdiCloudRefresh
+  // refreshImportIcon = mdiCloudRefresh
 }
 </script>

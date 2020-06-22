@@ -104,38 +104,14 @@
             })
           "
         />
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            v-if="isEditing"
-            x-large
-            min-width="150px"
-            color="primary"
-            type="submit"
-            :loading="isSubmitting"
-          >
-            Сохранить
-          </v-btn>
-          <v-btn
-            v-if="isShowing"
-            x-large
-            min-width="150px"
-            color="primary"
-            @click="sendEdit()"
-          >
-            Редактировать
-          </v-btn>
-          <v-btn
-            v-if="isShowing"
-            x-large
-            min-width="150px"
-            color="primary"
-            @click="sendDelete()"
-          >
-            Удалить
-          </v-btn>
-          <v-spacer />
-        </v-card-actions>
+        <FormActions
+          v-if="canEdit"
+          :is-editing="isEditing"
+          :is-showing="isShowing"
+          :is-submitting="isSubmitting"
+          :send-edit="sendEdit"
+          :send-delete="sendDelete"
+        />
       </v-form>
     </v-card-text>
   </v-card>
@@ -145,19 +121,20 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
+import FormActions from './FormActions.vue'
 
 import useAssignmentFormMachine from '@/compositions/useAssignmentFormMachine'
 
 @Component({
+  components: {
+    FormActions,
+  },
   setup (props: any) {
     return { ...useAssignmentFormMachine(props.assignmentFormMachine) }
   },
 })
 export default class AssignmentForm extends Vue {
   @Prop() assignmentFormMachine: any
-  // title: string = ''
   deadlineMenu = false
-  // deadlineDate: string = new Date().toISOString().substring(0, 10)
-  // selectedAssignmentGroup = null
 }
 </script>
