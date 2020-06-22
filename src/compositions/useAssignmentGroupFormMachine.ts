@@ -55,11 +55,16 @@ export default function useAssignmentFormMachine (machine: any) {
       sheetName.value = ag.sheetName
       upperLeftCell.value = ag.upperLeftCell
       lowerRightCell.value = ag.lowerRightCell
+      selectedIntegrationType.value = ag.integration_type.id
+      selectedMarksConstraint.value = ag.default_marks_constraint.id
+    }
+  })
+
+  watch(formData.wasPreloaded, (value, oldValue) => {
+    if (oldValue !== undefined && value && oldValue !== value) {
       maxAvailablePercentage.value =
         machine.state.context.values.remainingPercentages + percentage.value
       percentageHint.value = `Максимальный вес для этой группы = ${maxAvailablePercentage.value}%`
-      selectedIntegrationType.value = ag.integration_type.id
-      selectedMarksConstraint.value = ag.default_marks_constraint.id
     }
   })
 
