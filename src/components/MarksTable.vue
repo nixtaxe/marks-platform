@@ -1,7 +1,12 @@
 <template>
   <v-card>
     <v-card-title>
-      {{ groupName || 'Номер группы' }}
+      {{ disciplineName || 'Название дисциплины' }}
+    </v-card-title>
+    <v-card-subtitle>
+      {{ groupName || 'Группа' }}
+      <v-spacer />
+      {{ teacherFullName || 'Преподаватель' }}
       <v-spacer />
       <v-text-field
         v-model="search"
@@ -10,7 +15,10 @@
         single-line
         hide-details
       />
-    </v-card-title>
+    </v-card-subtitle>
+    <!-- <v-card-text>
+
+    </v-card-text> -->
     <v-data-table
       :loading="isLoading"
       :headers="headers"

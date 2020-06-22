@@ -5,6 +5,8 @@ import MarksConstraint from '@/models/MarksConstraint'
 
 export default function useMarksTableMachine (machine: any) {
   const groupName = computed(() => machine.state.context.groupName)
+  const disciplineName = computed(() => machine.state.context.disciplineName)
+  const teacherFullName = computed(() => machine.state.context.teacherFullName)
   const assignmentGroups = computed(
     () => machine.state.context.assignmentGroups,
   )
@@ -94,6 +96,8 @@ export default function useMarksTableMachine (machine: any) {
 
   return {
     groupName,
+    disciplineName,
+    teacherFullName,
     assignmentGroups,
     headers,
     studentMarks,

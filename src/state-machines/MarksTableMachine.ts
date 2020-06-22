@@ -21,6 +21,8 @@ interface MarksTableContext {
   canEdit: boolean
   semesterDiscipline: SemesterDiscipline
   groupName: string
+  disciplineName: string
+  teacherFullName: string
   assignmentGroups: any[]
   headers: TableHeader[]
   studentMarks: TableItem[]
@@ -164,12 +166,16 @@ class MarksTableMachine {
           saveMarksTable: assign((_context, event: any) => {
             const {
               groupName,
+              disciplineName,
+              teacherFullName,
               assignmentGroups,
               headers,
               items: studentMarks,
             } = getMarksDataForTable(event.data)
             return {
               groupName,
+              disciplineName,
+              teacherFullName,
               assignmentGroups,
               headers,
               studentMarks,

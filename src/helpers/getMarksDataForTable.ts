@@ -8,6 +8,10 @@ import AssignmentGroup from '@/models/AssignmentGroup'
 export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
   const groupName =
     groupMarks.teacher_discipline_student_group.student_group.name
+  const disciplineName =
+    groupMarks.teacher_discipline_student_group.academic_discipline.name
+  const teacherUser = groupMarks.teacher_discipline_student_group.teacher.user
+  const teacherFullName = `${teacherUser.familyName} ${teacherUser.name} ${teacherUser.patronymic}`
   const studentGroup = groupMarks.teacher_discipline_student_group.student_group
   const studentAssignments = groupMarks.assignment_groups.flatMap(
     (ag) => ag.assignments,
@@ -102,5 +106,12 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
 
   items = calculateSemesterMarks(items, assignmentGroups)
 
-  return { groupName, assignmentGroups, headers, items }
+  return {
+    groupName,
+    disciplineName,
+    teacherFullName,
+    assignmentGroups,
+    headers,
+    items,
+  }
 }
