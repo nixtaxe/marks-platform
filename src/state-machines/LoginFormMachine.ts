@@ -70,7 +70,7 @@ class LoginFormMachine {
           }),
         }),
         onError: assign({ error: (_context, event: any) => event.data }),
-        onSuccess: () => setTimeout(() => router.push('marks'), 500),
+        onSuccess: () => setTimeout(() => router.push('/search'), 500),
       },
     })
   }
