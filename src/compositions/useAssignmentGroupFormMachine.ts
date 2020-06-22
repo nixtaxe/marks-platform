@@ -22,17 +22,25 @@ export default function useAssignmentFormMachine (machine: any) {
 
   const formData = useFormMachine(machine)
 
+  const integrationType = computed(
+    () => machine.state.context.values.assignmentGroup.integration_type,
+  )
+
   const isIntegration = computed(
     () =>
-      machine.state.context.values.assignmentGroup.integration_type &&
-      +machine.state.context.values.assignmentGroup.integration_type !==
-        IntegrationCodes.NoIntegration + 1,
+      integrationType.value &&
+      ((typeof integrationType.value === 'object' &&
+        integrationType.value.code !== IntegrationCodes.NoIntegration) ||
+        +integrationType.value !== IntegrationCodes.NoIntegration + 1),
   )
   const isGoogleSpreadsheet = computed(
     () =>
-      machine.state.context.values.assignmentGroup.integration_type &&
-      +machine.state.context.values.assignmentGroup.integration_type ===
-        IntegrationCodes.GoogleSpreadsheetsIntegraion + 1,
+      integrationType.value &&
+      ((typeof integrationType.value === 'object' &&
+        integrationType.value.code ===
+          IntegrationCodes.GoogleSpreadsheetsIntegraion) ||
+        +integrationType.value ===
+          IntegrationCodes.GoogleSpreadsheetsIntegraion + 1),
   )
   const canRefreshImport = computed(
     () => isIntegration.value && formData.isShowing,
