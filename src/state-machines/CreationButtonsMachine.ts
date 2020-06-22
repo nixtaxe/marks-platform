@@ -10,6 +10,7 @@ import { FormMode } from './FormMachine'
 
 interface CreationButtonsContext {
   semesterDisciplineId: ID
+  canEdit: boolean
   error: string
 }
 
@@ -19,19 +20,34 @@ type CreationButtonsEvent =
   | { type: 'OPEN_ASSIGNMENT_GROUP_FORM' }
   | { type: 'CLOSE_ASSIGNMENT_FORM' }
   | { type: 'CLOSE_ASSIGNMENT_GROUP_FORM' }
-  | { type: 'SELECT_SEMESTER_DISCIPLINE'; id: ID }
+  | { type: 'SELECT_SEMESTER_DISCIPLINE'; id: ID; canEdit: boolean }
 
 const creationButtonsMachine = Machine<
   CreationButtonsContext,
   CreationButtonsEvent
 >(
   {
-    initial: 'idle',
+    initial: 'unknown',
     context: {
       semesterDisciplineId: '',
+      canEdit: false,
       error: '',
     },
     states: {
+      unknown: {
+        on: {
+          '': [
+            {
+              target: 'idle',
+              cond: 'canEdit',
+            },
+            {
+              target: 'hidden',
+            },
+          ],
+        },
+      },
+      hidden: {},
       idle: {
         on: {
           OPEN_ASSIGNMENT_FORM: 'assignmentForm',
@@ -43,10 +59,11 @@ const creationButtonsMachine = Machine<
           id: 'assignmentFormMachine',
           src: assignmentFormMachine,
           data: (context: CreationButtonsContext, _event: any) => {
-            const newContext = assignmentContext
+            const newContext = assignmentContext()
             newContext.values.semesterDisciplineId =
               context.semesterDisciplineId
             newContext.mode = FormMode.Editing
+            newContext.canEdit = context.canEdit
             return newContext
           },
           onDone: 'idle',
@@ -67,6 +84,7 @@ const creationButtonsMachine = Machine<
               context.semesterDisciplineId
             )
             newContext.mode = FormMode.Editing
+            newContext.canEdit = context.canEdit
             return newContext
           },
           onDone: 'idle',
@@ -78,7 +96,8 @@ const creationButtonsMachine = Machine<
     },
     on: {
       SELECT_SEMESTER_DISCIPLINE: {
-        actions: 'setSemesterDisciplineId',
+        target: 'unknown',
+        actions: 'setValues',
       },
       REFRESH: { actions: 'sendRefresh' },
     },
@@ -86,9 +105,13 @@ const creationButtonsMachine = Machine<
   {
     actions: {
       sendRefresh: sendParent('REFRESH'),
-      setSemesterDisciplineId: assign({
+      setValues: assign({
         semesterDisciplineId: (_context, event: any) => event.id,
+        canEdit: (_context, event: any) => event.canEdit,
       }),
+    },
+    guards: {
+      canEdit: (context, _event) => context.canEdit,
     },
   },
 )

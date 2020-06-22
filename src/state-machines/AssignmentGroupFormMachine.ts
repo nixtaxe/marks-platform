@@ -26,6 +26,7 @@ interface AssignmentGroupFormValues {
 interface AssignmentGroupFormContext {
   mode: FormMode
   values: AssignmentGroupFormValues
+  canEdit: boolean
   rules: AssignmentGroupFormRules
   error: string
   success: string
@@ -40,6 +41,7 @@ export const assignmentGroupContext = () =>
       integrationTypes: [],
       marksConstraints: [],
     },
+    canEdit: false,
     rules: {
       nameRules: [(v: string) => !!v || 'Введите название группы заданий'],
       percentageRules: [

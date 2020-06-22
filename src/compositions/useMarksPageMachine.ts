@@ -12,5 +12,12 @@ export default function useMarksPageMachine () {
   const creationButtonsMachine = computed(
     () => state.value.children.creationButtonsMachine,
   )
-  return { isLoaded, toolbarMachine, marksTableMachine, creationButtonsMachine }
+  const canEdit = computed(() => state.value.context.canEdit)
+  return {
+    isLoaded,
+    canEdit,
+    toolbarMachine,
+    marksTableMachine,
+    creationButtonsMachine,
+  }
 }

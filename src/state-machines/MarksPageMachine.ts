@@ -1,4 +1,5 @@
-import { Machine, assign, send, forwardTo } from 'xstate'
+import { Machine, assign, send, actions } from 'xstate'
+const { pure } = actions
 import toolbarMachine from '@/state-machines/ToolbarMachine'
 import { inject } from 'inversify-props'
 import IUserService from '@/services/IUserService'
@@ -9,12 +10,13 @@ import ID from '@/models/ID'
 
 interface MarksPageContext {
   user: User
+  canEdit: boolean
 }
 
 type MarksPageEvent =
   | { type: 'LOGOUT' }
   | { type: 'REFRESH' }
-  | { type: 'SELECT_SEMESTER_DISCIPLINE'; id: ID }
+  | { type: 'SELECT_SEMESTER_DISCIPLINE'; id: ID; userId: ID }
 
 class MarksPageMachine {
   @inject() userService!: IUserService
@@ -54,6 +56,7 @@ class MarksPageMachine {
                     on: {
                       SELECT_SEMESTER_DISCIPLINE: {
                         actions: [
+                          'setCanEdit',
                           'notifyMarksTableMachine',
                           'notifyCreationButtonsMachine',
                         ],
@@ -104,8 +107,21 @@ class MarksPageMachine {
           logout: () => this.userService.logout(),
           openLandingPage: () => router.replace('/'),
           sendRefresh: send('REFRESH', { to: 'marksTableMachine' }),
-          notifyMarksTableMachine: forwardTo('marksTableMachine'),
-          notifyCreationButtonsMachine: forwardTo('creationButtonsMachine'),
+          setCanEdit: assign({
+            canEdit: (context, event: any) => context.user.id === event.userId,
+          }),
+          notifyMarksTableMachine: pure((context, event: any) =>
+            send(
+              { ...event, canEdit: context.canEdit },
+              { to: 'marksTableMachine' },
+            ),
+          ),
+          notifyCreationButtonsMachine: pure((context, event: any) =>
+            send(
+              { ...event, canEdit: context.canEdit },
+              { to: 'creationButtonsMachine' },
+            ),
+          ),
           showError: (_context, event: any) => {
             // eslint-disable-next-line no-console
             console.error(event)

@@ -8,6 +8,7 @@ export enum FormMode {
 
 interface FormMachineContext {
   mode: FormMode
+  canEdit: boolean
   values: any
   rules: any
   error: string
@@ -67,11 +68,32 @@ const formMachine = Machine<FormMachineContext, FormEvents>(
         },
       },
       showing: {
+        initial: 'unknown',
+        states: {
+          unknown: {
+            on: {
+              '': [
+                {
+                  target: 'editable',
+                  cond: 'canEdit',
+                },
+                {
+                  target: 'nonEditable',
+                },
+              ],
+            },
+          },
+          editable: {
+            on: {
+              EDIT: { target: '#form.preloading', actions: 'onEditing' },
+              DELETE: '#form.submitting',
+              REFRESH: '#form.refreshing',
+            },
+          },
+          nonEditable: {},
+        },
         on: {
-          EDIT: { target: 'preloading', actions: 'onEditing' },
-          DELETE: 'submitting',
-          REFRESH: 'refreshing',
-          CLOSE_FORM: 'closed',
+          CLOSE_FORM: '#form.closed',
         },
       },
       editing: {
@@ -135,6 +157,7 @@ const formMachine = Machine<FormMachineContext, FormEvents>(
       isShowing: (context, _event) => context.mode === FormMode.Showing,
       isCreatingOrEditing: (context, _event) =>
         context.mode === FormMode.Creating || context.mode === FormMode.Editing,
+      canEdit: (context, _event) => context.canEdit,
     },
   },
 )

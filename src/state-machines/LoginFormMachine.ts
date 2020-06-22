@@ -19,6 +19,7 @@ interface LoginFormRules {
 interface LoginFormContext {
   mode: FormMode
   values: LoginFormValues
+  canEdit: boolean
   rules: LoginFormRules
   error: string
   success: string
@@ -30,6 +31,7 @@ const loginFormContext = <LoginFormContext>{
     username: '',
     password: '',
   },
+  canEdit: true,
   rules: {
     usernameRules: [
       (v: string) => !!v || 'Введите, пожалуйста, имя пользователя',

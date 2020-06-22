@@ -5,8 +5,10 @@ import ID from '@/models/ID'
 import getToolbarSearchData from '@/helpers/getToolbarSearchData'
 import SelectionSemesterDiscipline from '@/models/SelectionSemesterDiscipline'
 import IMarksService from '@/services/IMarksService'
+import SemesterDiscipline from '@/models/SemesterDiscipline'
 
 interface ToolbarContext {
+  rawSemesterDisciplines: SemesterDiscipline[]
   semesterDisciplines: SelectionSemesterDiscipline[]
   filteredSemesterDisciplines: SelectionSemesterDiscipline[]
   user: User
@@ -56,18 +58,25 @@ class ToolbarMachine {
         actions: {
           logout: sendParent('LOGOUT'),
           saveSemesterDisciplines: assign((context, event: any) => {
-            const semesterDisciplines = getToolbarSearchData(event.data)
+            const rawSemesterDisciplines = event.data
+            const semesterDisciplines = getToolbarSearchData(
+              rawSemesterDisciplines,
+            )
             const filteredSemesterDisciplines = semesterDisciplines
             return {
               ...context,
+              rawSemesterDisciplines,
               semesterDisciplines,
               filteredSemesterDisciplines,
             }
           }),
           selectSemesterDiscipline: sendParent(
-            (_context: ToolbarContext, event: any) => ({
+            (context: ToolbarContext, event: any) => ({
               type: 'SELECT_SEMESTER_DISCIPLINE',
               id: event.id,
+              userId: context.rawSemesterDisciplines.find(
+                (x) => x.id === event.id,
+              )?.teacher_discipline_student_group.teacher.user.id,
             }),
           ),
           searchSemesterDiscipline: assign((context, event: any) => {

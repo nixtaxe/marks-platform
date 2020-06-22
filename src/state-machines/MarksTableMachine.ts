@@ -18,6 +18,7 @@ import assignmentGroupFormMachine, {
 interface MarksTableContext {
   semesterDisciplineId: ID
   user: User
+  canEdit: boolean
   semesterDiscipline: SemesterDiscipline
   groupName: string
   assignmentGroups: any[]
@@ -28,7 +29,7 @@ interface MarksTableContext {
 
 type MarksTableEvent =
   | { type: 'REFRESH' }
-  | { type: 'SELECT_SEMESTER_DISCIPLINE'; id: ID }
+  | { type: 'SELECT_SEMESTER_DISCIPLINE'; id: ID; canEdit: boolean }
   | { type: 'CREATE_MARK'; mark: Mark }
   | { type: 'UPDATE_MARK'; mark: Mark }
   | { type: 'DELETE_MARK'; id: ID }
@@ -105,11 +106,12 @@ class MarksTableMachine {
                   id: 'assignmentFormMachine',
                   src: assignmentFormMachine,
                   data: (context: MarksTableContext, event: any) => {
-                    const newContext = assignmentContext
+                    const newContext = assignmentContext()
                     newContext.values.semesterDisciplineId =
                       context.semesterDisciplineId
                     newContext.mode = FormMode.Showing
                     newContext.values.assignment.id = event.id
+                    newContext.canEdit = context.canEdit
                     return newContext
                   },
                 },
@@ -124,6 +126,7 @@ class MarksTableMachine {
                       context.semesterDisciplineId
                     newContext.mode = FormMode.Showing
                     newContext.values.assignmentGroup.id = event.id
+                    newContext.canEdit = context.canEdit
                     return newContext
                   },
                 },
@@ -133,7 +136,7 @@ class MarksTableMachine {
               REFRESH: '#marksTable.loading.refreshing',
               SELECT_SEMESTER_DISCIPLINE: {
                 target: '#marksTable.loading.refreshing',
-                actions: 'setSemesterDisciplineId',
+                actions: 'setValues',
               },
               CREATE_MARK: '#marksTable.loading.creatingMark',
               UPDATE_MARK: '#marksTable.loading.updatingMark',
@@ -177,8 +180,9 @@ class MarksTableMachine {
             // eslint-disable-next-line no-console
             console.error(event)
           },
-          setSemesterDisciplineId: assign({
+          setValues: assign({
             semesterDisciplineId: (_context, event: any) => event.id,
+            canEdit: (_context, event: any) => event.canEdit,
           }),
         },
         services: {

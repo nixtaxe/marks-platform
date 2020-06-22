@@ -19,6 +19,7 @@ export default gql`
         teacher {
           id
           user {
+            id
             familyName
             name
             patronymic

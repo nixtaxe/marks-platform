@@ -10,7 +10,10 @@
       pa-5
     >
       <MarksTable :marks-table-machine="marksTableMachine" />
-      <CreationButtons :creation-buttons-machine="creationButtonsMachine" />
+      <CreationButtons
+        v-if="canEdit"
+        :creation-buttons-machine="creationButtonsMachine"
+      />
     </v-layout>
   </div>
 </template>

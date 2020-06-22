@@ -23,6 +23,7 @@ interface AssignmentFormValues {
 interface AssignmentFormContext {
   mode: FormMode
   values: AssignmentFormValues
+  canEdit: boolean
   rules: AssignmentFormRules
   error: string
   success: string
@@ -36,6 +37,7 @@ export const assignmentContext = <AssignmentFormContext>{
     marksConstraints: [],
     semesterDisciplineId: '1',
   },
+  canEdit: false,
   rules: {
     titleRules: [(v: string) => !!v || 'Введите название задания'],
     assignmentGroupRules: [(v: string) => !!v || 'Выберите группу для задания'],

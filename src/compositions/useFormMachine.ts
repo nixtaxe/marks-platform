@@ -13,6 +13,7 @@ export default function useFormMachine (machine: any) {
   const isRefreshing = computed(() => machine.state.matches('refreshing'))
   const isSuccess = computed(() => machine.state.matches('success'))
   const wasPreloaded = computed(() => !machine.state.matches('preloading'))
+  const canEdit = computed(() => machine.state.canEdit)
 
   const send = machine.send
   const sendEdit = () => machine.send('EDIT')
@@ -40,6 +41,7 @@ export default function useFormMachine (machine: any) {
     isRefreshing,
     isSuccess,
     wasPreloaded,
+    canEdit,
     send,
     sendEdit,
     sendDelete,
