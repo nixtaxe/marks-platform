@@ -25,6 +25,7 @@ import ToolBar from '@/layouts/ToolBar.vue'
 import MarksTable from '@/components/MarksTable.vue'
 import CreationButtons from '@/components/CreationButtons.vue'
 import useMarksPageMachine from '../compositions/useMarksPageMachine'
+import { Prop } from 'vue-property-decorator'
 
 @Component({
   components: {
@@ -32,9 +33,12 @@ import useMarksPageMachine from '../compositions/useMarksPageMachine'
     MarksTable,
     CreationButtons,
   },
-  setup () {
-    return useMarksPageMachine()
+  setup (props: any) {
+    return useMarksPageMachine(props.id, props.userId)
   },
 })
-export default class MarksPage extends Vue {}
+export default class MarksPage extends Vue {
+  @Prop({ default: '' }) id!: string
+  @Prop({ default: '' }) userId!: string
+}
 </script>

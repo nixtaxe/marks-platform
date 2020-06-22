@@ -44,8 +44,8 @@ import useToolbarMachine from '@/compositions/useToolbarMachine'
 import { mdiLogoutVariant } from '@mdi/js'
 
 @Component({
-  setup (props: any) {
-    return useToolbarMachine(props.toolbarMachine)
+  setup (props: any, ctx: any) {
+    return useToolbarMachine(props.toolbarMachine, ctx.root.$router)
   },
 })
 export default class ToolBar extends Vue {

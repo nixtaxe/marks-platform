@@ -14,8 +14,14 @@ const routes: Array<RouteConfig> = [
     component: loadView('LandingPage'),
   },
   {
-    path: '/marks',
+    path: '/search',
     component: loadView('MarksPage'),
+  },
+  {
+    path: '/marks/:userId/:id',
+    name: 'semester-discipline',
+    component: loadView('MarksPage'),
+    props: true,
   },
   {
     path: '*',
@@ -40,8 +46,8 @@ router.beforeEach((to, from, next) => {
   }
 
   // redirect to marks if logged in (in testiong purposes)
-  if (loggedIn && to.path !== '/marks') {
-    return next('/marks')
+  if (loggedIn && to.path === '/') {
+    return next('/search')
   }
 
   next()
