@@ -89,8 +89,6 @@
         />
         <v-select
           v-model="selectedMarksConstraint"
-          :rules="marksConstraintRules"
-          required
           :items="marksConstraints"
           :disabled="!isEditing"
           name="item"
