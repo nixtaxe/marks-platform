@@ -63,7 +63,9 @@
             <th
               v-for="header in headers"
               :key="header.value"
-              @click="sendOpenAssignmentForm(header.value)"
+              @click="
+                header.editable ? sendOpenAssignmentForm(header.value) : null
+              "
             >
               {{ header.text }}
             </th>
