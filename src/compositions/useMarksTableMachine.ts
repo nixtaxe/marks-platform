@@ -2,6 +2,7 @@ import { computed } from '@vue/composition-api'
 import ID from '@/models/ID'
 import Mark from '@/models/Mark'
 import MarksConstraint from '@/models/MarksConstraint'
+import useIsMobileCheck from './useIsMobileCheck'
 
 export default function useMarksTableMachine (machine: any) {
   const groupName = computed(() => machine.state.context.groupName)
@@ -115,6 +116,7 @@ export default function useMarksTableMachine (machine: any) {
     isPersistentAssignmentForm,
     isPersistentAssignmentGroupForm,
     canEdit,
+    ...useIsMobileCheck(),
     sendRefresh,
     performMutation,
     sendOpenAssignmentForm,

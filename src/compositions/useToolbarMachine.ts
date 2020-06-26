@@ -1,5 +1,6 @@
 import { ref, computed } from '@vue/composition-api'
 import SemesterDiscipline from '@/models/SemesterDiscipline'
+import useIsMobileCheck from './useIsMobileCheck'
 
 export default function useToolbarMachine (machine: any, router: any) {
   const user = machine.state.context.user
@@ -48,6 +49,7 @@ export default function useToolbarMachine (machine: any, router: any) {
     filterSemesterDisciplines,
     loading,
     items,
+    ...useIsMobileCheck(),
     sendLogout,
     sendSelectSemesterDiscipline,
   }

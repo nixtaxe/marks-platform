@@ -30,7 +30,10 @@
       sort-by="name"
       item-key="id"
     >
-      <template v-slot:header="{ props: { headers } }">
+      <template
+        v-if="!isMobile"
+        v-slot:header="{ props: { headers } }"
+      >
         <thead>
           <tr>
             <th />

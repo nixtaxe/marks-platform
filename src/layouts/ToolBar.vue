@@ -19,7 +19,10 @@
       return-object
       @input="sendSelectSemesterDiscipline($event)"
     />
-    <v-toolbar-title class="white--text mx-5">
+    <v-toolbar-title
+      v-if="!isMobile"
+      class="white--text mx-5"
+    >
       {{ name }}
     </v-toolbar-title>
     <v-btn
