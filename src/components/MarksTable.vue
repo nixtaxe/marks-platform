@@ -104,6 +104,7 @@
             v-if="
               isNaN(item[header.value].value) || item[header.value].value === ''
             "
+            style="width: 50px;"
           >
             {{ item[header.value].value }}
           </div>

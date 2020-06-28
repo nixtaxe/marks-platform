@@ -1,4 +1,5 @@
 import { computed } from '@vue/composition-api'
+import useIsMobileCheck from './useIsMobileCheck'
 
 export default function useLandingPageHeroMachine (machine: any) {
   const state = computed(() => machine.state)
@@ -22,6 +23,7 @@ export default function useLandingPageHeroMachine (machine: any) {
     context,
     isLoginForm,
     isPersistent,
+    ...useIsMobileCheck(),
     loginFormMachine,
     send,
     sendOpenLoginForm,

@@ -1,14 +1,15 @@
 <template>
-  <v-layout
-    row
-    pa-5
+  <v-row
+    class="pa-5"
+    align-content="space-around"
+    justify="space-around"
   >
     <v-btn
       class="flat"
       :block="false"
       @click="sendOpenAssignmentGroupForm()"
     >
-      Добавить группу заданий
+      + группа заданий
     </v-btn>
     <v-dialog
       max-width="480px"
@@ -22,13 +23,12 @@
         :assignment-group-form-machine="assignmentGroupFormMachine"
       />
     </v-dialog>
-
     <v-btn
       class="flat"
       :block="false"
       @click="sendOpenAssignmentForm()"
     >
-      Добавить задание
+      + задание
     </v-btn>
     <v-dialog
       max-width="480px"
@@ -42,7 +42,7 @@
         :assignment-form-machine="assignmentFormMachine"
       />
     </v-dialog>
-  </v-layout>
+  </v-row>
 </template>
 
 <script lang="ts">

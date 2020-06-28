@@ -1,20 +1,23 @@
 <template>
-  <div>
+  <div
+    style="height: 100%;"
+    class="background"
+  >
     <ToolBar
       v-if="isLoaded"
       :toolbar-machine="toolbarMachine"
     />
-    <v-layout
+    <v-col
       v-if="isLoaded"
-      column
-      pa-5
+      align-self="start"
+      class="pa-6"
     >
       <MarksTable :marks-table-machine="marksTableMachine" />
       <CreationButtons
         v-if="canEdit"
         :creation-buttons-machine="creationButtonsMachine"
       />
-    </v-layout>
+    </v-col>
   </div>
 </template>
 
