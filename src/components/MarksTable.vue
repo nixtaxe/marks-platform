@@ -89,11 +89,24 @@
         v-slot:[`item.${header.value}`]="{ item }"
       >
         <div
-          v-if="header.value === 'name'"
+          v-if="header.simple"
           :key="`${item.id}-${header.value}`"
         >
           {{ item[header.value].value }}
         </div>
+        <v-chip
+          v-else-if="!header.editable || !canEdit"
+          :key="`${item.id}-${header.value}`"
+          label
+          :color="getColor(+item[header.value].value, header)"
+          dark
+        >
+          {{
+            +item[header.value].value % 1 !== 0
+              ? (+item[header.value].value).toFixed(2)
+              : item[header.value].value
+          }}
+        </v-chip>
         <v-edit-dialog
           v-else
           :key="`${item.id}-${header.value}`"
@@ -115,15 +128,12 @@
             dark
           >
             {{
-              header.marks_constraint.maxValue === 100
+              +item[header.value].value % 1 !== 0
                 ? (+item[header.value].value).toFixed(2)
                 : item[header.value].value
             }}
           </v-chip>
-          <template
-            v-if="header.editable && canEdit"
-            v-slot:input
-          >
+          <template v-slot:input>
             <tr>
               <td>{{ header.marks_constraint.minValue }} &lt;=</td>
               <v-spacer />

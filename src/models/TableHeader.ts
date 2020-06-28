@@ -5,6 +5,7 @@ export default interface TableHeader {
   value: string
   sortable: boolean
   editable: boolean
+  simple: boolean
   fixed?: boolean
   marks_constraint?: MarksConstraint
 }

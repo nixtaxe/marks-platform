@@ -31,6 +31,7 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
       value: 'name',
       editable: false,
       sortable: false,
+      simple: true,
       width: '200px',
       fixed: true,
     },
@@ -43,6 +44,7 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
           value: x.id,
           editable: true,
           sortable: false,
+          simple: false,
           width: '32px',
           fixed: false,
         }
@@ -57,6 +59,7 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
             value: `${ag.id}-${ag.name}`,
             editable: false,
             sortable: false,
+            simple: true,
             width: '32px',
             fixed: false,
           }
@@ -67,6 +70,7 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
       value: 'semester_mark',
       editable: false,
       sortable: false,
+      simple: false,
       width: '200px',
       fixed: true,
       marks_constraint: groupMarks.marks_constraint,
@@ -118,7 +122,11 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
     })
   })
 
-  items = calculateSemesterMarks(items, assignmentGroups)
+  items = calculateSemesterMarks(
+    items,
+    assignmentGroups,
+    groupMarks.marks_constraint,
+  )
 
   return {
     groupName,
