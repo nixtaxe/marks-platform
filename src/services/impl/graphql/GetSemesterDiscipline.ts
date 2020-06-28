@@ -41,7 +41,7 @@ export default gql`
         id
         name
         percentage
-        assignments {
+        assignments(sort: "id:asc") {
           id
           title
           marks_constraint {
