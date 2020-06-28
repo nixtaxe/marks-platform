@@ -1,9 +1,11 @@
 import AssignmentGroup from '@/models/AssignmentGroup'
 import Assignment from '@/models/Assignment'
+import MarksConstraint from '@/models/MarksConstraint'
 
 export default function calculateSemesterMarks (
   marks: any,
   assignmentGroups: AssignmentGroup[],
+  semesterMark: MarksConstraint,
 ): any[] {
   const result = new Array(marks.length)
 
@@ -22,7 +24,12 @@ export default function calculateSemesterMarks (
       })
     })
 
-    result[i] = { ...marksRow, semester_mark: { value: studentSemesterMark } }
+    result[i] = {
+      ...marksRow,
+      semester_mark: {
+        value: (studentSemesterMark * semesterMark.maxValue) / 100.0,
+      },
+    }
   })
 
   return result
