@@ -16,8 +16,16 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
   const teacherFullName = `${teacherUser.familyName} ${teacherUser.name} ${teacherUser.patronymic}`
   let startDate = getSemesterTimeAndYear(groupMarks.semesterDates.startDate)
   const studentGroup = groupMarks.teacher_discipline_student_group.student_group
-  const studentAssignments = groupMarks.assignment_groups.flatMap(
-    (ag) => ag.assignments,
+  const studentAssignments = groupMarks.assignment_groups.flatMap((ag) =>
+    ag.assignments.length
+      ? ag.assignments
+      : [
+        {
+          title: '',
+          id: `${ag.id}-${ag.name}`,
+          marks: <any>[],
+        },
+      ],
   )
   const assignmentGroups = groupMarks.assignment_groups.flatMap((ag) => ({
     text: ag.name,
@@ -38,33 +46,37 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
   ]
     .concat(
       studentAssignments.map((x) => {
-        return {
-          ...x,
-          text: x.title,
-          value: x.id,
-          editable: true,
-          sortable: false,
-          simple: false,
-          width: '32px',
-          fixed: false,
-        }
-      }),
-    )
-    .concat(
-      assignmentGroups
-        .filter((x) => x.assignments.length === 0)
-        .map((ag) => {
+        if (x.title === '')
           return {
-            text: '',
-            value: `${ag.id}-${ag.name}`,
+            ...x,
+            text: x.title,
+            value: x.id,
             editable: false,
             sortable: false,
             simple: true,
             width: '32px',
             fixed: false,
           }
-        }),
+        else
+          return {
+            ...x,
+            text: x.title,
+            value: x.id,
+            editable: true,
+            sortable: false,
+            simple: false,
+            width: '32px',
+            fixed: false,
+          }
+      }),
     )
+    // .concat(
+    //   assignmentGroups
+    //     .filter((x) => x.assignments.length === 0)
+    //     .map((ag) => {
+    //       return
+    //     }),
+    // )
     .concat({
       text: 'Итоговая оценка',
       value: 'semester_mark',

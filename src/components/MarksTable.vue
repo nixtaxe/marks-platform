@@ -89,7 +89,12 @@
         v-slot:[`item.${header.value}`]="{ item }"
       >
         <div
-          v-if="header.simple"
+          v-if="
+            header.simple ||
+              ((isNaN(item[header.value].value) ||
+                item[header.value].value === '') &&
+                !canEdit)
+          "
           :key="`${item.id}-${header.value}`"
         >
           {{ item[header.value].value }}
