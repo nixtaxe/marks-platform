@@ -41,6 +41,7 @@
           :persistent-hint="true"
           :rules="percentageRules"
           :disabled="!isEditing"
+          :append-icon="percentIcon"
           @keypress="checkKey($event)"
           @change="sendChange({ key: 'percentage', value: +percentage })"
         />
@@ -95,7 +96,7 @@
             <v-text-field
               v-model="sheetName"
               name="sheetName"
-              label="Навание листа"
+              label="Название листа"
               :disabled="!isEditing"
               @change="
                 sendChange({
@@ -152,7 +153,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
 import FormActions from './FormActions.vue'
-// import { mdiCloudRefresh } from '@mdi/js'
+import { mdiPercentOutline } from '@mdi/js'
 
 import useAssignmentGroupFormMachine from '@/compositions/useAssignmentGroupFormMachine'
 
@@ -168,6 +169,6 @@ import useAssignmentGroupFormMachine from '@/compositions/useAssignmentGroupForm
 })
 export default class AssignmentGroupForm extends Vue {
   @Prop() assignmentGroupFormMachine: any
-  // refreshImportIcon = mdiCloudRefresh
+  percentIcon = mdiPercentOutline
 }
 </script>

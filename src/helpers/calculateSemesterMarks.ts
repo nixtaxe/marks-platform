@@ -26,6 +26,7 @@ export default function calculateSemesterMarks (
 
     result[i] = {
       ...marksRow,
+      rating: { value: studentSemesterMark },
       semester_mark: {
         value: (studentSemesterMark * semesterMark.maxValue) / 100.0,
       },

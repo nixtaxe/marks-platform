@@ -15,7 +15,22 @@ import assignmentGroupFormMachine, {
   assignmentGroupContext,
 } from './AssignmentGroupFormMachine'
 
+export enum NameFormat {
+  FamilyName,
+  FamilyNameAndName,
+  FullName,
+}
+
+export enum AssignmentFormat {
+  Position,
+  Title,
+}
+
 interface MarksTableContext {
+  nameFormat: NameFormat
+  assignmentFormat: AssignmentFormat
+  nameFormats: any[]
+  assignmentFormats: any[]
   semesterDisciplineId: ID
   user: User
   canEdit: boolean
@@ -39,6 +54,8 @@ type MarksTableEvent =
   | { type: 'OPEN_ASSIGNMENT_GROUP_FORM'; id: ID }
   | { type: 'CLOSE_ASSIGNMENT_FORM' }
   | { type: 'CLOSE_ASSIGNMENT_GROUP_FORM' }
+  | { type: 'SELECT_NAME_FORMAT'; format: NameFormat }
+  | { type: 'SELECT_ASSIGNMENT_FORMAT'; format: AssignmentFormat }
 
 class MarksTableMachine {
   @inject() marksService!: IMarksService
@@ -102,7 +119,14 @@ class MarksTableMachine {
           loaded: {
             initial: 'idle',
             states: {
-              idle: {},
+              idle: {
+                on: {
+                  SELECT_NAME_FORMAT: { actions: 'refreshNameFormat' },
+                  SELECT_ASSIGNMENT_FORMAT: {
+                    actions: 'refreshAssignmentFormat',
+                  },
+                },
+              },
               assignmentForm: {
                 invoke: {
                   id: 'assignmentFormMachine',
@@ -163,7 +187,7 @@ class MarksTableMachine {
       },
       {
         actions: {
-          saveMarksTable: assign((_context, event: any) => {
+          saveMarksTable: assign((context: MarksTableContext, event: any) => {
             const {
               groupName,
               disciplineName,
@@ -174,6 +198,7 @@ class MarksTableMachine {
               items: studentMarks,
             } = getMarksDataForTable(event.data)
             return {
+              ...context,
               groupName,
               disciplineName,
               teacherFullName,
@@ -192,6 +217,36 @@ class MarksTableMachine {
             semesterDisciplineId: (_context, event: any) => event.id,
             canEdit: (_context, event: any) => event.canEdit,
           }),
+          refreshNameFormat: assign(
+            (context: MarksTableContext, event: any) => {
+              const {
+                items: studentMarks,
+              } = getMarksDataForTable(context.semesterDiscipline, {
+                nameFormat: event.format,
+                assignmentFormat: context.assignmentFormat,
+              })
+              return {
+                ...context,
+                nameFormat: event.format,
+                studentMarks,
+              }
+            },
+          ),
+          refreshAssignmentFormat: assign(
+            (context: MarksTableContext, event: any) => {
+              const {
+                headers,
+              } = getMarksDataForTable(context.semesterDiscipline, {
+                nameFormat: context.nameFormat,
+                assignmentFormat: event.format,
+              })
+              return {
+                ...context,
+                assignmentFormat: event.format,
+                headers,
+              }
+            },
+          ),
         },
         services: {
           loadMarksTable: (context) =>
@@ -210,5 +265,37 @@ class MarksTableMachine {
   }
 }
 
-const marksTableMachine = new MarksTableMachine().create()
+export const marksTableContext = () =>
+  <MarksTableContext>{
+    nameFormat: NameFormat.FamilyName,
+    assignmentFormat: AssignmentFormat.Position,
+    nameFormats: [
+      {
+        text: 'Фамилия',
+        value: NameFormat.FamilyName,
+      },
+      {
+        text: 'Фамилия Имя',
+        value: NameFormat.FamilyNameAndName,
+      },
+      {
+        text: 'ФИО',
+        value: NameFormat.FullName,
+      },
+    ],
+    assignmentFormats: [
+      {
+        text: 'Позиция в группе заданий',
+        value: AssignmentFormat.Position,
+      },
+      {
+        text: 'Название',
+        value: AssignmentFormat.Title,
+      },
+    ],
+  }
+
+const marksTableMachine = new MarksTableMachine()
+  .create()
+  .withContext(marksTableContext())
 export default marksTableMachine

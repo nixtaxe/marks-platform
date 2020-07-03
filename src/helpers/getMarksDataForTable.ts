@@ -6,8 +6,19 @@ import calculateSemesterMarks from './calculateSemesterMarks'
 import AssignmentGroup from '@/models/AssignmentGroup'
 import Student from '@/models/Student'
 import getSemesterTimeAndYear from './getSemesterTimeAndYear'
+import {
+  NameFormat,
+  AssignmentFormat,
+} from '@/state-machines/MarksTableMachine'
+import getFormattedName from './getFormattedName'
 
-export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
+export default function getMarksDataForTable (
+  groupMarks: SemesterDiscipline,
+  options = {
+    nameFormat: NameFormat.FamilyName,
+    assignmentFormat: AssignmentFormat.Position,
+  },
+) {
   const groupName =
     groupMarks.teacher_discipline_student_group.student_group.name
   const disciplineName =
@@ -33,10 +44,22 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
     width: ag.assignments.length,
     ...ag,
   }))
+
+  const ratingConstraints = {
+    minValue: 0,
+    maxValue: 100,
+    satisfactory: 61,
+    good: 71,
+    excellent: 86,
+  }
+
+  let i = 1
+  let agId = 0
   const headers: TableHeader[] = [
     <any>{
       text: 'Студент',
       value: 'name',
+      isAssignment: false,
       editable: false,
       sortable: false,
       simple: true,
@@ -46,40 +69,57 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
   ]
     .concat(
       studentAssignments.map((x) => {
+        //@ts-ignore
+        if (agId !== x.assignment_group.id) {
+          //@ts-ignore
+          agId = x.assignment_group.id
+          i = 1
+        }
+
         if (x.title === '')
           return {
             ...x,
             text: x.title,
             value: x.id,
+            isAssignment: false,
             editable: false,
             sortable: false,
             simple: true,
-            width: '32px',
             fixed: false,
           }
-        else
-          return {
+        else {
+          let result = {
             ...x,
             text: x.title,
+            position: i++,
             value: x.id,
+            isAssignment: true,
             editable: true,
             sortable: false,
             simple: false,
-            width: '32px',
             fixed: false,
           }
+          if (options.assignmentFormat !== AssignmentFormat.Position)
+            delete result.position
+          return result
+        }
       }),
     )
-    // .concat(
-    //   assignmentGroups
-    //     .filter((x) => x.assignments.length === 0)
-    //     .map((ag) => {
-    //       return
-    //     }),
-    // )
+    .concat({
+      text: 'Рейтинг(%)',
+      value: 'rating',
+      isAssignment: false,
+      editable: false,
+      sortable: false,
+      simple: false,
+      width: '200px',
+      fixed: true,
+      marks_constraint: ratingConstraints,
+    })
     .concat({
       text: 'Итоговая оценка',
       value: 'semester_mark',
+      isAssignment: false,
       editable: false,
       sortable: false,
       simple: false,
@@ -104,7 +144,7 @@ export default function getMarksDataForTable (groupMarks: SemesterDiscipline) {
     items.push({
       id: x.id,
       name: {
-        value: `${x.user.familyName} ${x.user.name} ${x.user.patronymic}`,
+        value: getFormattedName(x.user, options.nameFormat),
       },
       semester_mark: { value: 0.0 },
     })

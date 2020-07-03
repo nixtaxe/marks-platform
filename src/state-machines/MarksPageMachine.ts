@@ -4,7 +4,9 @@ import toolbarMachine from '@/state-machines/ToolbarMachine'
 import { inject } from 'inversify-props'
 import IUserService from '@/services/IUserService'
 import router from '@/router'
-import marksTableMachine from '@/state-machines/MarksTableMachine'
+import marksTableMachine, {
+  marksTableContext,
+} from '@/state-machines/MarksTableMachine'
 import creationButtonsMachine from './CreationButtonsMachine'
 import ID from '@/models/ID'
 
@@ -67,8 +69,10 @@ class MarksPageMachine {
                     invoke: {
                       id: 'marksTableMachine',
                       src: marksTableMachine,
-                      data: {
-                        user: (context: MarksPageContext) => context.user,
+                      data: (context: MarksPageContext, _event: any) => {
+                        const newContext = marksTableContext()
+                        newContext.user = context.user
+                        return newContext
                       },
                       onError: { actions: 'showError' },
                     },

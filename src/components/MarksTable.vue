@@ -17,6 +17,30 @@
         hide-details
       />
     </v-card-subtitle>
+    <v-card-subtitle>
+      <v-row>
+        <v-select
+          v-model="nameFormat"
+          :items="nameFormats"
+          label="Формат имен студентов"
+          style="max-width: 200px;"
+          class="mx-5"
+          dense
+          @change="sendSelectNameFormat(nameFormat)"
+        />
+        <v-select
+          v-if="!isMobile"
+          v-model="assignmentFormat"
+          :items="assignmentFormats"
+          label="Формат заголовков заданий"
+          style="max-width: 250px;"
+          class="mx-5"
+          dense
+          @change="sendSelectAssignmentFormat(assignmentFormat)"
+        />
+        <v-spacer />
+      </v-row>
+    </v-card-subtitle>
     <v-data-table
       :loading="isLoading"
       :headers="headers"
@@ -44,7 +68,9 @@
               class="subtitle-2"
               @click="sendOpenAssignmentGroupForm(assignmentGroup.id)"
             >
-              {{ assignmentGroup.text }}
+              {{
+                assignmentGroup.text + ' ' + assignmentGroup.percentage + '%'
+              }}
             </th>
             <v-dialog
               max-width="480px"
@@ -67,7 +93,23 @@
                 header.editable ? sendOpenAssignmentForm(header.value) : null
               "
             >
-              {{ header.text }}
+              <v-tooltip
+                v-if="isAssignmentPosition && header.isAssignment"
+                top
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <span
+                    v-bind="attrs"
+                    v-on="on"
+                  >{{
+                    'position' in header ? header.position : header.text
+                  }}</span>
+                </template>
+                <span>{{ header.text }}</span>
+              </v-tooltip>
+              <div v-else>
+                {{ header.text }}
+              </div>
             </th>
             <v-dialog
               max-width="480px"
@@ -96,6 +138,7 @@
                 !canEdit)
           "
           :key="`${item.id}-${header.value}`"
+          style="min-width: 31px;"
         >
           {{ item[header.value].value }}
         </div>
@@ -105,6 +148,7 @@
           label
           :color="getColor(+item[header.value].value, header)"
           dark
+          small
         >
           {{
             +item[header.value].value % 1 !== 0
@@ -122,7 +166,7 @@
             v-if="
               isNaN(item[header.value].value) || item[header.value].value === ''
             "
-            style="width: 50px;"
+            style="min-width: 31px;"
           >
             {{ item[header.value].value }}
           </div>
@@ -131,6 +175,7 @@
             label
             :color="getColor(+item[header.value].value, header)"
             dark
+            small
           >
             {{
               +item[header.value].value % 1 !== 0
@@ -139,6 +184,21 @@
             }}
           </v-chip>
           <template v-slot:input>
+            <!-- <v-row
+              class="pa-3"
+              justify="space-around"
+            >
+              <v-chip
+                v-for="i in header.marks_constraint.maxValue + 1"
+                :key="i"
+                label
+                :color="getColor(i-1, header)"
+                dark
+                small
+              >
+                {{ i-1 }}
+              </v-chip>
+            </v-row> -->
             <tr>
               <td>{{ header.marks_constraint.minValue }} &lt;=</td>
               <v-spacer />

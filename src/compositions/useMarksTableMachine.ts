@@ -3,6 +3,10 @@ import ID from '@/models/ID'
 import Mark from '@/models/Mark'
 import MarksConstraint from '@/models/MarksConstraint'
 import useIsMobileCheck from './useIsMobileCheck'
+import {
+  AssignmentFormat,
+  NameFormat,
+} from '@/state-machines/MarksTableMachine'
 
 export default function useMarksTableMachine (machine: any) {
   const groupName = computed(() => machine.state.context.groupName)
@@ -12,6 +16,8 @@ export default function useMarksTableMachine (machine: any) {
   const assignmentGroups = computed(
     () => machine.state.context.assignmentGroups,
   )
+  const isAssignmentPosition = () =>
+    machine.state.context.assignmentFormat === AssignmentFormat.Position
   const headers = computed(() => machine.state.context.headers)
   const studentMarks = computed(() => machine.state.context.studentMarks)
   const assignmentFormMachine = computed(
@@ -20,6 +26,12 @@ export default function useMarksTableMachine (machine: any) {
   const assignmentGroupFormMachine = computed(
     () => machine.state.children.assignmentGroupFormMachine,
   )
+  const nameFormats = computed(() => machine.state.context.nameFormats)
+  const assignmentFormats = computed(
+    () => machine.state.context.assignmentFormats,
+  )
+  var nameFormat = nameFormats.value[0]
+  var assignmentFormat = assignmentFormats.value[0]
 
   const isLoading = computed(() => machine.state.matches('loading'))
   const isLoaded = computed(() => machine.state.matches('loaded'))
@@ -53,6 +65,10 @@ export default function useMarksTableMachine (machine: any) {
     send('OPEN_ASSIGNMENT_GROUP_FORM', { id })
   const sendCloseAssignmentForm = () => send('CLOSE_ASSIGNMENT_FORM')
   const sendCloseAssignmentGroupForm = () => send('CLOSE_ASSIGNMENT_GROUP_FORM')
+  const sendSelectNameFormat = (format: NameFormat) =>
+    send({ type: 'SELECT_NAME_FORMAT', format })
+  const sendSelectAssignmentFormat = (format: AssignmentFormat) =>
+    send({ type: 'SELECT_ASSIGNMENT_FORMAT', format })
   const getColor = (mark: number, header: any) => {
     if (!header || !('marks_constraint' in header)) return
     const { satisfactory, good, excellent } = header.marks_constraint
@@ -109,6 +125,10 @@ export default function useMarksTableMachine (machine: any) {
     studentMarks,
     assignmentFormMachine,
     assignmentGroupFormMachine,
+    nameFormats,
+    assignmentFormats,
+    nameFormat,
+    assignmentFormat,
     isLoading,
     isLoaded,
     isFailure,
@@ -117,6 +137,7 @@ export default function useMarksTableMachine (machine: any) {
     isPersistentAssignmentForm,
     isPersistentAssignmentGroupForm,
     canEdit,
+    isAssignmentPosition,
     ...useIsMobileCheck(),
     sendRefresh,
     performMutation,
@@ -124,6 +145,8 @@ export default function useMarksTableMachine (machine: any) {
     sendOpenAssignmentGroupForm,
     sendCloseAssignmentForm,
     sendCloseAssignmentGroupForm,
+    sendSelectAssignmentFormat,
+    sendSelectNameFormat,
     getColor,
     checkKey,
     filterByName,

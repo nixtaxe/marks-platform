@@ -62,6 +62,9 @@ export default gql`
               id
             }
           }
+          assignment_group {
+            id
+          }
         }
       }
     }
