@@ -4,7 +4,7 @@ import { setContext } from 'apollo-link-context'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:1337/graphql',
+  uri: process.env.VUE_APP_SERVER_URL + 'graphql',
 })
 
 const middlewareLink = setContext(async () => {

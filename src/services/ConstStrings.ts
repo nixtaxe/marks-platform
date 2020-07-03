@@ -1,2 +1,2 @@
-export const baseUrl = 'http://localhost:1337/'
+export const baseUrl = process.env.VUE_APP_SERVER_URL
 export const assignmentGroupsPath = baseUrl + 'assignment-groups/'
