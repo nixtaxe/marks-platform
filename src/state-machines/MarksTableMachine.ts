@@ -14,6 +14,7 @@ import { FormMode } from './FormMachine'
 import assignmentGroupFormMachine, {
   assignmentGroupContext,
 } from './AssignmentGroupFormMachine'
+import User from '@/models/User'
 
 export enum NameFormat {
   FamilyName,
@@ -219,12 +220,13 @@ class MarksTableMachine {
           }),
           refreshNameFormat: assign(
             (context: MarksTableContext, event: any) => {
-              const {
-                items: studentMarks,
-              } = getMarksDataForTable(context.semesterDiscipline, {
-                nameFormat: event.format,
-                assignmentFormat: context.assignmentFormat,
-              })
+              const { items: studentMarks } = getMarksDataForTable(
+                context.semesterDiscipline,
+                {
+                  nameFormat: event.format,
+                  assignmentFormat: context.assignmentFormat,
+                },
+              )
               return {
                 ...context,
                 nameFormat: event.format,
@@ -234,12 +236,13 @@ class MarksTableMachine {
           ),
           refreshAssignmentFormat: assign(
             (context: MarksTableContext, event: any) => {
-              const {
-                headers,
-              } = getMarksDataForTable(context.semesterDiscipline, {
-                nameFormat: context.nameFormat,
-                assignmentFormat: event.format,
-              })
+              const { headers } = getMarksDataForTable(
+                context.semesterDiscipline,
+                {
+                  nameFormat: context.nameFormat,
+                  assignmentFormat: event.format,
+                },
+              )
               return {
                 ...context,
                 assignmentFormat: event.format,

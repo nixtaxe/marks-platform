@@ -5,6 +5,9 @@ export default gql`
       jwt
       user {
         id
+        role {
+          name
+        }
       }
     }
   }

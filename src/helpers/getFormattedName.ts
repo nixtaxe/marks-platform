@@ -1,4 +1,5 @@
 import { NameFormat } from '@/state-machines/MarksTableMachine'
+import User from '@/models/User'
 
 export default function getFormattedName (
   user: User,

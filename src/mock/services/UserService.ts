@@ -3,6 +3,7 @@ import IUserService from '@/services/IUserService'
 import LoginResponse from '@/models/LoginResponse'
 import usernameLoginResponse from '@/mock/data/login/username-login-response.json'
 import { load, handleSaving, getLocalStorageItem } from '@/services/helpers'
+import User from '@/models/User'
 
 export default class FakeUserService implements IUserService {
   public async login (username: string, password: string): Promise<User> {

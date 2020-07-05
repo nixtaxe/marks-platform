@@ -6,6 +6,7 @@ import getToolbarSearchData from '@/helpers/getToolbarSearchData'
 import SelectionSemesterDiscipline from '@/models/SelectionSemesterDiscipline'
 import IMarksService from '@/services/IMarksService'
 import SemesterDiscipline from '@/models/SemesterDiscipline'
+import User from '@/models/User'
 
 interface ToolbarContext {
   rawSemesterDisciplines: SemesterDiscipline[]

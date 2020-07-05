@@ -4,6 +4,7 @@ import LoginMutation from '@/services/impl/graphql/LoginMutation'
 import LoginResponse from '@/models/LoginResponse'
 import { getLocalStorageItem, saveToLocalStorage } from '@/services/helpers'
 import GetUserQuery from './graphql/GetUserQuery'
+import User from '@/models/User'
 
 export default class UserService implements IUserService {
   async login (username: string, password: string): Promise<User> {

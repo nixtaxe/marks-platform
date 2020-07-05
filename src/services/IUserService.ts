@@ -1,3 +1,5 @@
+import User from '@/models/User'
+
 export default interface IUserService {
   login(username: string, password: string): Promise<User>
   logout(): void

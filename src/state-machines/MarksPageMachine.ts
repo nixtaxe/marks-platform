@@ -9,6 +9,7 @@ import marksTableMachine, {
 } from '@/state-machines/MarksTableMachine'
 import creationButtonsMachine from './CreationButtonsMachine'
 import ID from '@/models/ID'
+import User from '@/models/User'
 
 interface MarksPageContext {
   user: User

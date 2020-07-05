@@ -8,6 +8,9 @@ export default gql`
       patronymic
       username
       email
+      role {
+        name
+      }
     }
   }
 `
