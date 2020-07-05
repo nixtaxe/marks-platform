@@ -11,6 +11,12 @@ export default function useToolbarMachine (machine: any, router: any) {
   const items = computed(
     () => machine.state.context.filteredSemesterDisciplines,
   )
+  const relevantSemesterDisciplines = computed(
+    () => machine.state.context.relevantSemesterDisciplines,
+  )
+  const userRole = machine.state.context.user.role.name
+  const isTeacher = userRole === 'Преподаватель'
+  const isStudent = userRole === 'Студент'
 
   const filterSemesterDisciplines = (
     item: any,
@@ -52,6 +58,9 @@ export default function useToolbarMachine (machine: any, router: any) {
     name,
     selectSemesterDiscipline,
     filterSemesterDisciplines,
+    relevantSemesterDisciplines,
+    isTeacher,
+    isStudent,
     loading,
     items,
     ...useIsMobileCheck(),

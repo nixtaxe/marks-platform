@@ -7,11 +7,13 @@ import SelectionSemesterDiscipline from '@/models/SelectionSemesterDiscipline'
 import IMarksService from '@/services/IMarksService'
 import SemesterDiscipline from '@/models/SemesterDiscipline'
 import User from '@/models/User'
+import getRelevantSemesterDisciplines from '@/helpers/getRelevantSemesterDisciplines'
 
 interface ToolbarContext {
   rawSemesterDisciplines: SemesterDiscipline[]
   semesterDisciplines: SelectionSemesterDiscipline[]
   filteredSemesterDisciplines: SelectionSemesterDiscipline[]
+  relevantSemesterDisciplines: any[]
   user: User
 }
 
@@ -64,11 +66,16 @@ class ToolbarMachine {
               rawSemesterDisciplines,
             )
             const filteredSemesterDisciplines = semesterDisciplines
+            const relevantSemesterDisciplines = getRelevantSemesterDisciplines(
+              context.user,
+              rawSemesterDisciplines,
+            )
             return {
               ...context,
               rawSemesterDisciplines,
               semesterDisciplines,
               filteredSemesterDisciplines,
+              relevantSemesterDisciplines,
             }
           }),
           selectSemesterDiscipline: sendParent(

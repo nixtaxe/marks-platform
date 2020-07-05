@@ -54,47 +54,49 @@
 
         <v-divider />
         <v-list-item>
-          <v-list-item-title>Актуальные журналы оценок</v-list-item-title>
+          <v-list-item-subtitle>
+            Актуальные журналы оценок:
+          </v-list-item-subtitle>
         </v-list-item>
 
-        <v-list-group
-          v-for="item in relevantSemesterDisciplines"
-          :key="item.title"
-          v-model="item.active"
-          no-action
-        >
-          <template v-slot:activator>
+        <template v-if="isTeacher">
+          <v-list-group
+            v-for="item in relevantSemesterDisciplines"
+            :key="item.title"
+            v-model="item.active"
+            no-action
+          >
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.title" />
+              </v-list-item-content>
+            </template>
+
+            <v-list-item
+              v-for="subItem in item.items"
+              :key="subItem.title"
+              class="pl-6"
+              link
+              @click="sendSelectSemesterDiscipline({ value: subItem.value })"
+            >
+              <v-list-item-content>
+                <v-list-item-title v-text="subItem.title" />
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-group>
+        </template>
+        <template v-if="isStudent">
+          <v-list-item
+            v-for="item in relevantSemesterDisciplines"
+            :key="item.title"
+            link
+            @click="sendSelectSemesterDiscipline({ value: item.value })"
+          >
             <v-list-item-content>
               <v-list-item-title v-text="item.title" />
             </v-list-item-content>
-          </template>
-
-          <v-list-item
-            v-for="subItem in item.items"
-            :key="subItem.title"
-            class="pl-6"
-            link
-          >
-            <v-list-item-content>
-              <v-list-item-title v-text="subItem.title" />
-            </v-list-item-content>
           </v-list-item>
-        </v-list-group>
-
-        <!-- <v-list-item
-          v-for="item in items"
-          :key="item.title"
-          link
-        >
-          <v-list-item-content>
-            <v-list-item-title wrap>
-              {{ 'Методы дистанционного зондирования Земли ' }}
-            </v-list-item-title>
-            <v-list-item-subtitle>{{ 'Иванов И.И.' }}</v-list-item-subtitle>
-            <v-list-item-subtitle>{{ 'Б8116-01.03.02' }}</v-list-item-subtitle>
-            <v-list-item-subtitle>{{ 'Весна 2020' }}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item> -->
+        </template>
       </v-list>
     </v-navigation-drawer>
   </nav>
@@ -116,18 +118,5 @@ export default class ToolBar extends Vue {
   @Prop() toolbarMachine: any
   logoutIcon = mdiLogoutVariant
   closeIcon = mdiClose
-  relevantSemesterDisciplines = [
-    {
-      title: 'Б8116-01.03.02',
-      items: [{ title: 'Математический анализ' }],
-    },
-    {
-      title: 'Б8115-01.03.04',
-      items: [
-        { title: 'Методы дистанционного зондирования Земли' },
-        { title: 'Математический анализ' },
-      ],
-    },
-  ]
 }
 </script>
